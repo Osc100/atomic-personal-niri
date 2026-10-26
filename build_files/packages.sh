@@ -30,6 +30,13 @@ dnf5 -y install --from-repo=terra noctalia-greeter gpu-screen-recorder satty
 # updates-testing for Fedora 45, and 5.2.1 refuses its newer settings.
 dnf5 -y install --enablerepo=updates-testing --exclude='gnome-keyring*' noctalia
 
+# tuned-ppd serves power-profiles-daemon's D-Bus API
+# (org.freedesktop.UPower.PowerProfiles) on top of tuned, which is what
+# Noctalia's power profile widget talks to.
+dnf5 -y install \
+    tuned \
+    tuned-ppd
+
 dnf5 -y install \
     xwayland-satellite \
     greetd \

@@ -21,5 +21,7 @@ cp /tmp/policy.json /etc/containers/policy.json
 systemctl enable podman.socket
 systemctl enable greetd.service
 systemctl enable tailscaled.service
+systemctl enable tuned.service
+systemctl enable tuned-ppd.service
 systemctl enable atomic-niri-flatpak-preinstall.service
 systemctl set-default graphical.target
