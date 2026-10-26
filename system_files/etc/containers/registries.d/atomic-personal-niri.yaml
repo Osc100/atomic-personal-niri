@@ -1,0 +1,3 @@
+docker:
+  ghcr.io/osc100/atomic-personal-niri:
+    use-sigstore-attachments: true

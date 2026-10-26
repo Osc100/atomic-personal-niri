@@ -2,14 +2,16 @@
 
 set -ouex pipefail
 
-cp -avf "/ctx/system_files"/. /
-
 ### Repositories
 
-# Terra, for what Fedora doesn't package. terra-release carries the signing
-# key, so only this first install skips the check.
-dnf5 -y install --nogpgcheck \
-    --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+# Terra, for what Fedora doesn't package. dnf expands $releasever in the repo
+# URL but not in --setopt, hence rpm -E for the key's.
+fedora="$(rpm -E %fedora)"
+dnf5 -y install \
+    --repofrompath "terra,https://repos.fyralabs.com/terra${fedora}" \
+    --setopt=terra.gpgcheck=1 \
+    --setopt="terra.gpgkey=https://repos.fyralabs.com/terra${fedora}/key.asc" \
+    terra-release
 
 dnf5 -y copr enable yalter/niri-git
 
@@ -41,15 +43,10 @@ dnf5 -y install \
 # gnome-keyring in as a weak dependency.
 dnf5 -y remove gnome-keyring gnome-keyring-pam
 
-# Fedora's greetd runs the greeter as "greetd", not "greeter".
-GREETER_USER=greetd /usr/share/noctalia-greeter/setup_greeter_system.sh
-
 ### Shell
 
 dnf5 -y install fish fastfetch
 dnf5 -y install --from-repo=terra starship
-
-sed -i 's|^SHELL=.*|SHELL=/usr/bin/fish|' /etc/default/useradd
 
 ### Apps and tools
 
@@ -110,11 +107,3 @@ dnf5 -y remove \
 
 dnf5 -y copr disable yalter/niri-git
 dnf5 config-manager setopt 'terra*.enabled=0'
-
-### Services
-
-systemctl enable podman.socket
-systemctl enable greetd.service
-systemctl enable tailscaled.service
-systemctl enable atomic-niri-flatpak-preinstall.service
-systemctl set-default graphical.target
