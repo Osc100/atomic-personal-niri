@@ -12,6 +12,8 @@ input {
 
     touchpad {
         tap
+        accel-speed 0.5
+        click-method "clickfinger"
         natural-scroll
     }
 
