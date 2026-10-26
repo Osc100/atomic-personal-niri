@@ -1,0 +1,15 @@
+[Unit]
+Description=Install the Flatpaks listed in /usr/share/flatpak/preinstall.d
+Documentation=man:flatpak-preinstall(1)
+Wants=network-online.target
+After=network-online.target flatpak-add-fedora-repos.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flatpak preinstall --system -y --noninteractive
+# Flathub may not be reachable yet at boot.
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

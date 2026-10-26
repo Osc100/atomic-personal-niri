@@ -1,0 +1,100 @@
+#!/usr/bin/bash
+# Configures NUT for the UPS in /usr/share/atomic-niri/nut/ups.conf and sets up
+# the login the Noctalia UPS panel uses for its buttons. Run it with
+# `ujust setup-nut`.
+#
+# Passwords are generated on every run, so running it again changes them. Each
+# file it touches is backed up first as <file>.bak.<timestamp>.
+
+set -euo pipefail
+
+if [[ ${EUID} -ne 0 ]]; then
+    echo "error: must run as root (use ujust setup-nut)." >&2
+    exit 1
+fi
+
+user="${1:?usage: setup-nut USER}"
+home="$(getent passwd "${user}" | cut -d: -f6)"
+if [[ -z ${home} ]]; then
+    echo "error: no user '${user}'." >&2
+    exit 1
+fi
+group="$(id -gn "${user}")"
+
+etc=/etc/ups
+template=/usr/share/atomic-niri/nut/ups.conf
+ups="$(sed -n 's/^\[\(.*\)\]$/\1/p' "${template}" | head -n 1)"
+
+password() {
+    od -An -tx1 -N16 /dev/urandom | tr -d ' \n'
+}
+upsmon_password="$(password)"
+panel_password="$(password)"
+
+stamp="$(date +%Y%m%d%H%M%S)"
+for f in nut.conf ups.conf upsd.users upsmon.conf; do
+    if [[ -e ${etc}/${f} ]]; then
+        cp -a "${etc}/${f}" "${etc}/${f}.bak.${stamp}"
+    fi
+done
+
+if grep -q '^MODE=' "${etc}/nut.conf"; then
+    sed -i 's/^MODE=.*/MODE=standalone/' "${etc}/nut.conf"
+else
+    echo 'MODE=standalone' >> "${etc}/nut.conf"
+fi
+
+if grep -q "^\[${ups}\]" "${etc}/ups.conf"; then
+    echo "info: ${ups} is already in ${etc}/ups.conf, leaving it alone."
+else
+    # maxretry is a global setting, so it has to go above every section.
+    if ! grep -q '^maxretry' "${etc}/ups.conf"; then
+        sed -i '1i maxretry = 3' "${etc}/ups.conf"
+    fi
+    printf '\n' >> "${etc}/ups.conf"
+    grep -v '^#' "${template}" | sed '/./,$!d' >> "${etc}/ups.conf"
+fi
+
+# "panel" gets only the commands the plugin's buttons send. Never give it
+# anything that can cut the load (load.off, shutdown.*).
+install -m 640 -o root -g nut /dev/stdin "${etc}/upsd.users" <<EOF
+# Written by ujust setup-nut.
+
+[upsmon]
+    password = ${upsmon_password}
+    upsmon primary
+
+[panel]
+    password = ${panel_password}
+    instcmds = beeper.toggle
+    instcmds = beeper.mute
+    instcmds = beeper.enable
+    instcmds = beeper.disable
+    instcmds = test.battery.start.quick
+EOF
+
+sed -i '/^MONITOR /d' "${etc}/upsmon.conf"
+echo "MONITOR ${ups}@localhost 1 upsmon ${upsmon_password} primary" >> "${etc}/upsmon.conf"
+
+install -d -m 700 -o "${user}" -g "${group}" "${home}/.config/nut"
+printf '%s\n' "${panel_password}" |
+    install -m 600 -o "${user}" -g "${group}" /dev/stdin "${home}/.config/nut/panel-password"
+
+restorecon -R "${etc}" "${home}/.config/nut"
+
+systemctl enable nut.target nut-driver.target nut-server.service nut-monitor.service \
+    nut-driver-enumerator.path nut-driver-enumerator.service
+systemctl restart nut-driver-enumerator.service
+systemctl restart nut-driver.target nut-server.service nut-monitor.service
+
+for _ in $(seq 15); do
+    if status="$(upsc "${ups}@localhost" ups.status 2>/dev/null)"; then
+        echo "NUT is up: ${ups} reports ${status}."
+        exit 0
+    fi
+    sleep 1
+done
+
+echo "warn: no reading from ${ups} after 15 s. Is it plugged in? Check:" >&2
+echo "  journalctl -b -u nut-driver@${ups} -u nut-server" >&2
+exit 1

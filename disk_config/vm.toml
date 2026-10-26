@@ -1,0 +1,10 @@
+[[customizations.filesystem]]
+mountpoint = "/"
+minsize = "20 GiB"
+
+# Only for the local test VM (just build-vm). GitHub builds use disk.toml.
+[[customizations.user]]
+name = "test"
+password = "test"
+groups = ["wheel"]
+shell = "/usr/bin/fish"

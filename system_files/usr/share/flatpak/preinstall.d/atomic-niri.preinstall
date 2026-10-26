@@ -1,0 +1,38 @@
+# Installed from Flathub at boot by atomic-niri-flatpak-preinstall.service.
+# Removing a line here uninstalls that app on the next boot.
+
+[Flatpak Preinstall com.brave.Browser]
+Branch=stable
+
+[Flatpak Preinstall app.zen_browser.zen]
+Branch=stable
+
+[Flatpak Preinstall com.slack.Slack]
+Branch=stable
+
+[Flatpak Preinstall com.stremio.Stremio]
+Branch=stable
+
+[Flatpak Preinstall app.drey.Warp]
+Branch=stable
+
+[Flatpak Preinstall io.github.celluloid_player.Celluloid]
+Branch=stable
+
+[Flatpak Preinstall org.gnome.Loupe]
+Branch=stable
+
+[Flatpak Preinstall io.missioncenter.MissionCenter]
+Branch=stable
+
+[Flatpak Preinstall org.gnome.Calculator]
+Branch=stable
+
+[Flatpak Preinstall org.gnome.TextEditor]
+Branch=stable
+
+[Flatpak Preinstall org.gnome.FileRoller]
+Branch=stable
+
+[Flatpak Preinstall org.gnome.baobab]
+Branch=stable
