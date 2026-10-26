@@ -26,8 +26,11 @@ dnf5 -y install --from-repo=copr:copr.fedorainfracloud.org:yalter:niri-git \
     --exclude='gnome-keyring*' niri
 dnf5 -y install --from-repo=terra noctalia-greeter gpu-screen-recorder satty
 
-dnf5 -y install --exclude='gnome-keyring*' \
-    noctalia \
+# Noctalia 5.3.0, the version the config was written with, is still in
+# updates-testing for Fedora 45, and 5.2.1 refuses its newer settings.
+dnf5 -y install --enablerepo=updates-testing --exclude='gnome-keyring*' noctalia
+
+dnf5 -y install \
     xwayland-satellite \
     greetd \
     greetd-selinux \
