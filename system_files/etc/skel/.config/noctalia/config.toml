@@ -32,7 +32,7 @@ background_opacity = 0.60 # see-through enough for Hyprland's blur (compositor_b
 center = [ "clock", "notifications" ]
 concave_edge_corners = true
 enabled = true # on every monitor but the portrait DP-2, see the override below
-end = [ "media", "spacer_1", "group:g1", "spacer_1", "tray", "recorder", "wallhaven", "brightness", "network", "volume", "session" ]
+end = [ "media", "spacer_1", "group:g1", "spacer_1", "tray", "recorder", "wallhaven", "brightness", "bluetooth", "network", "volume", "session" ]
 margin_edge = 0
 margin_ends = 0
 radius_bottom_left = 12
@@ -151,6 +151,9 @@ wallpaper_scheme = "m3-tonal-spot"
         input_path = "~/.config/noctalia/templates/niri-layout.kdl"
         output_path = "~/.config/niri/cfg/layout.kdl"
 
+[widget.brightness]
+show_label = false
+
 [widget.clock]
 color = "secondary"
 format = "{:%I:%M %p %A %m/%d/%y}"
@@ -193,7 +196,6 @@ type = "sysmon"
 # The screen recorder plugin's button: a click starts or stops a recording, and it shows while one
 # runs. Shift + Print and Mod + Shift + Print in niri's binds drive the same recorder
 [widget.recorder]
-color = "secondary"
 type = "noctalia/screen_recorder:recorder"
 
 # The UPS (Member's Selection ST-1500MS, through NUT as st1500) in the system group beside the
