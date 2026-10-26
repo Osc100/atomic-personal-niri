@@ -173,6 +173,15 @@ ostree-rechunk $target_image=image_name $tag=default_tag:
 
     GRAPHROOT="$(podman info --format '{{ '{{.Store.GraphRoot}}' }}')"
 
+    # Keep each package in the layer it had last build, so adding one package
+    # doesn't reshuffle the rest and turn a small update into a 1 GB download.
+    # Skipped locally (no IMAGE_REGISTRY) and on the first push of an image.
+    PREVIOUS_BUILD_ARGS=()
+    PREVIOUS_BUILD="docker://${IMAGE_REGISTRY:-}/${target_image}:${tag}"
+    if [[ -n "${IMAGE_REGISTRY:-}" ]] && skopeo inspect --raw "${PREVIOUS_BUILD}" >/dev/null 2>&1; then
+        PREVIOUS_BUILD_ARGS=(--previous-build "${PREVIOUS_BUILD}")
+    fi
+
     podman run --rm --pull=never --privileged \
       --mount=type=image,src="${target_image}:${tag}",target=/rpm-ostree \
       --mount=type=bind,src=${GRAPHROOT},target=/run/host-container-storage,rw \
@@ -180,6 +189,7 @@ ostree-rechunk $target_image=image_name $tag=default_tag:
       --entrypoint /usr/bin/rpm-ostree \
       "${RPM_OSTREE_CHUNKER_IMAGE}" \
       compose build-chunked-oci \
+      "${PREVIOUS_BUILD_ARGS[@]}" \
       --max-layers 127 \
       --format-version=2 \
       --bootc \
