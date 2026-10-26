@@ -67,7 +67,7 @@ dnf5 -y install --exclude='nodejs*' \
     lsd \
     btop \
     tailscale
-dnf5 -y install --from-repo=terra zellij mise
+dnf5 -y install --from-repo=terra zellij mise zed
 
 # Without the rpm-ostree plugin, so it only handles Flatpaks.
 dnf5 -y install --exclude=gnome-software-rpm-ostree gnome-software
