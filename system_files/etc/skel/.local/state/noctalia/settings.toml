@@ -93,9 +93,6 @@ widget_order = [ "lockscreen-login-box@DP-2", "lockscreen-login-box@DP-1" ]
         show_unlock_hint = true
         show_weather = true
 
-[plugin_settings."noctalia/wallhaven"]
-api_key = "BLoZxAROtQZDzfddFM7Sg3WzembkYgeB"
-
 [plugin_settings."osc/cutemonitor-ups"]
 data_source = "nut"
 panel_events = true
@@ -146,18 +143,6 @@ wallpaper_scheme = "m3-rainbow"
 
     [theme.templates]
     builtin_ids = [ "alacritty", "btop", "gtk3", "gtk4", "hyprland", "kcolorscheme", "kitty", "niri", "qt", "scroll", "starship" ]
-
-[wallpaper.default]
-path = "/home/osc/Pictures/wallhaven-k8jljm.jpg"
-
-[wallpaper.last]
-path = "/home/osc/Pictures/wallhaven-k8jljm.jpg"
-
-[wallpaper.monitors.DP-1]
-path = "/home/osc/Pictures/wallhaven-k8jljm.jpg"
-
-[wallpaper.monitors.DP-2]
-path = "/home/osc/Pictures/wallhaven-k8jljm.jpg"
 
 [widget.active_window]
 display = "icon_only"

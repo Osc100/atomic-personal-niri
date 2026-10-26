@@ -28,10 +28,10 @@ type = "power_profile"
 type = "noctalia/screen_recorder:toggle"
 
 [bar.default]
-enabled = false # only the primary monitor gets a bar, see the DP-1 override below
 background_opacity = 0.60 # see-through enough for Hyprland's blur (compositor_blur) to show
 center = [ "clock", "notifications" ]
 concave_edge_corners = true
+enabled = true # on every monitor but the portrait DP-2, see the override below
 end = [ "media", "spacer_1", "group:g1", "spacer_1", "tray", "recorder", "wallhaven", "brightness", "network", "volume", "session" ]
 margin_edge = 0
 margin_ends = 0
@@ -51,26 +51,26 @@ thickness = 35
     opacity = 1.0
     padding = 6.0
 
-    [bar.default.monitor.DP-1]
-    enabled = true
+    [bar.default.monitor.DP-2]
+    enabled = false
 
 [shell]
 clipboard_image_action_command = "satty -f -"
 launch_apps_as_systemd_services = true
+# typing in niri's overview opens the launcher with what was typed, as GNOME's overview searches
+niri_overview_type_to_launch_enabled = true
 polkit_agent = true
 settings_show_advanced = true
 time_format = "{:%I:%M %p}"
-# typing in niri's overview opens the launcher with what was typed, as GNOME's overview searches
-niri_overview_type_to_launch_enabled = true
 
     [shell.greeter_sync]
     auto_sync = true
 
     [shell.panel]
-    transparency_mode = "glass"
     open_near_click_control_center = true
     session_placement = "floating"
     session_position = "center"
+    transparency_mode = "glass"
 
     [shell.screenshot]
     copy_to_clipboard = false
@@ -131,8 +131,8 @@ background_opacity = 0.75
 [idle.behavior.screen-off]
 action = "screen_off"
 enabled = true
-timeout = 300.0
 locked_timeout = 30.0
+timeout = 300.0
 
 [system.monitor]
 gpu_poll_seconds = 2
@@ -193,8 +193,8 @@ type = "sysmon"
 # The screen recorder plugin's button: a click starts or stops a recording, and it shows while one
 # runs. Shift + Print and Mod + Shift + Print in niri's binds drive the same recorder
 [widget.recorder]
-type = "noctalia/screen_recorder:recorder"
 color = "secondary"
+type = "noctalia/screen_recorder:recorder"
 
 # The UPS (Member's Selection ST-1500MS, through NUT as st1500) in the system group beside the
 # GPU, as two of the osc/cutemonitor-ups plugin's bar items (cutecaption's, kept as a local copy in
@@ -204,24 +204,23 @@ color = "secondary"
 #
 # The load, after the power source's icon: a plug on mains, a battery in an outage
 [widget.ups_load]
-type = "osc/cutemonitor-ups:bar"
 display_mode = "icon"
 icon_color = "on_surface"
 label_content = "load"
 label_style = "meter"
+type = "osc/cutemonitor-ups:bar"
 
 # The battery's charge, after a battery glyph that follows it
 [widget.ups_battery]
-type = "osc/cutemonitor-ups:bar"
 display_mode = "icon"
 icon = "battery"
 icon_color = "on_surface"
 label_content = "battery"
 label_style = "meter"
+type = "osc/cutemonitor-ups:bar"
 
-# On a laptop, at the end of the group: its power draw beside a plug, then its
-# battery. Both hide on a machine without a system battery, and the UPS items
-# above hide on one with.
+# On a laptop, at the end of the group: its power draw beside a plug, then its battery. Both hide
+# on a machine without a system battery, and the UPS items above hide on one with.
 [widget.power_draw]
 type = "osc/cutemonitor-ups:power"
 
@@ -249,6 +248,6 @@ show_labels = false
 # monitor: its columns and stacks, with the windows on screen outlined, which is where in the strip
 # the view is
 [widget.niri_preview]
+output_scope = "current" # each bar maps its own monitor's strip; DP-2 has no bar
 type = "teagar/niri-workspace-preview:preview"
 viewport_mode = "highlight"
-output_scope = "current" # the bar is only on DP-1, so only its strip; the portrait one has no map
