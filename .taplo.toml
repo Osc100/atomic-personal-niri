@@ -1,0 +1,22 @@
+# Formatting for `taplo fmt`. Keys keep their order, since sorting them would part comments from
+# the keys they describe.
+exclude = [
+  # Noctalia writes this one itself; it is copied in from a live session
+  "system_files/etc/skel/.local/state/noctalia/settings.toml",
+]
+
+[formatting]
+align_comments = false
+array_auto_collapse = false
+indent_tables = true
+
+# Noctalia's config as Noctalia writes its TOML: subtables indented four spaces under their
+# parent, and arrays padded and kept on one line
+[[rule]]
+include = ["system_files/etc/skel/.config/noctalia/config.toml"]
+
+  [rule.formatting]
+  array_auto_expand = false
+  compact_arrays = false
+  indent_string = "    "
+  indent_tables = true

@@ -145,11 +145,11 @@ wallpaper_scheme = "m3-tonal-spot"
     [theme.templates]
     builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "alacritty", "hyprland" ]
 
-    # niri's layout and border colours, in the palette; the built-in niri template is left off
-    # because it paints the focused border full-strength primary
-    [theme.templates.user.niri-layout]
-    input_path = "~/.config/noctalia/templates/niri-layout.kdl"
-    output_path = "~/.config/niri/cfg/layout.kdl"
+        # niri's layout and border colours, in the palette; the built-in niri template is left off
+        # because it paints the focused border full-strength primary
+        [theme.templates.user.niri-layout]
+        input_path = "~/.config/noctalia/templates/niri-layout.kdl"
+        output_path = "~/.config/niri/cfg/layout.kdl"
 
 [widget.clock]
 color = "secondary"

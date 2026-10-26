@@ -47,7 +47,14 @@ local DEMO = {
 
 -- Fields each simulation overrides; "lost" and "no_ups" replace the link instead.
 local SIMULATIONS = {
-  on_battery = { status = "on_battery", supply = "battery", onBattery = true, inputV = 0, batteryPct = 87, runtimeSec = 2280 },
+  on_battery = {
+    status = "on_battery",
+    supply = "battery",
+    onBattery = true,
+    inputV = 0,
+    batteryPct = 87,
+    runtimeSec = 2280,
+  },
   low_battery = {
     status = "low_battery",
     supply = "battery",
@@ -585,7 +592,8 @@ function onIpc(event, payload)
       resolve()
     end
   elseif event == "dump" then
-    local text = noctalia.json.encode({ active = active, link = link, snapshot = lastGood, simulation = simulation }, true)
+    local text =
+      noctalia.json.encode({ active = active, link = link, snapshot = lastGood, simulation = simulation }, true)
     noctalia.log(`cutemonitor-ups state: {text}`)
   end
 end

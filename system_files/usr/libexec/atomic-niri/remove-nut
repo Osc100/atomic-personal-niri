@@ -31,6 +31,8 @@ for f in nut.conf ups.conf upsd.users upsmon.conf; do
     if [[ -e /usr/etc/ups/${f} ]]; then
         original="/usr/etc/ups/${f}"
     else
+        # setup-nut's backups are named <file>.bak.<timestamp>, so ls and sort are safe here
+        # shellcheck disable=SC2012
         original="$(ls "${etc}/${f}".bak.* 2>/dev/null | sort | head -n 1 || true)"
     fi
     if [[ -z ${original} ]]; then

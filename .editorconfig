@@ -1,0 +1,10 @@
+root = true
+
+# Shell scripts, as shfmt formats them: four-space indents
+[*.sh]
+indent_style = space
+indent_size = 4
+
+[system_files/usr/libexec/atomic-niri/*]
+indent_style = space
+indent_size = 4

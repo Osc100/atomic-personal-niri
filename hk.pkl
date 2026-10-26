@@ -1,0 +1,38 @@
+amends "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.pkl"
+
+// The tools come from mise.toml; `hk install` puts these on git's pre-commit hook, and
+// `hk check --all` / `hk fix --all` run them over the whole repo.
+local linters = new Mapping<String, Step> {
+    ["taplo"] = Builtins.taplo_format
+    // the built-in step only takes .lua; the plugin is Luau
+    ["stylua"] = (Builtins.stylua) {
+        types = null
+        glob = List("**/*.luau")
+    }
+    ["shfmt"] = Builtins.shfmt
+    ["shellcheck"] = Builtins.shellcheck
+    ["jactionlint"] = Builtins.jactionlint
+    // catches a key or token before it is committed, as the Wallhaven key once was
+    ["detect_private_key"] = Builtins.detect_private_key
+    // niri's own parser: the whole config, from config.kdl and its includes
+    ["niri"] {
+        glob = List("system_files/etc/niri/**/*.kdl")
+        check = "niri validate -c system_files/etc/niri/config.kdl"
+    }
+}
+
+hooks {
+    ["pre-commit"] {
+        fix = true
+        stash = "git"
+        steps = linters
+    }
+    ["check"] {
+        steps = linters
+    }
+    ["fix"] {
+        fix = true
+        steps = linters
+    }
+}

@@ -125,7 +125,11 @@ eq(nut.isValidUps("ups@host;reboot"), false, "semicolon rejected")
 -- Terminal command
 local testCommand = nut.terminalCommand("cyberpower@localhost", "test") or ""
 eq(testCommand:sub(1, 6), "sh -c ", "test command runs through sh")
-eq(testCommand:find("send '\\''cyberpower@localhost'\\'' test.battery.start.quick", 1, true) ~= nil, true, "test command")
+eq(
+  testCommand:find("send '\\''cyberpower@localhost'\\'' test.battery.start.quick", 1, true) ~= nil,
+  true,
+  "test command"
+)
 eq(nut.terminalCommand("cyberpower", "nope"), nil, "unknown action")
 eq(nut.terminalCommand("bad name", "mute"), nil, "invalid ups")
 

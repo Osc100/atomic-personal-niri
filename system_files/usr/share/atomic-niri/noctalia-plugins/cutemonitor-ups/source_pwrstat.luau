@@ -50,8 +50,12 @@ local function parseTimestamp(text)
     return nil
   end
   local asUtc = os.time({
-    year = tonumber(y), month = tonumber(mo), day = tonumber(d),
-    hour = tonumber(h), min = tonumber(mi), sec = tonumber(s),
+    year = tonumber(y),
+    month = tonumber(mo),
+    day = tonumber(d),
+    hour = tonumber(h),
+    min = tonumber(mi),
+    sec = tonumber(s),
   })
   return asUtc - utcOffsetAt(asUtc - utcOffsetAt(asUtc))
 end

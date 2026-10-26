@@ -41,7 +41,7 @@ done
 if grep -q '^MODE=' "${etc}/nut.conf"; then
     sed -i 's/^MODE=.*/MODE=standalone/' "${etc}/nut.conf"
 else
-    echo 'MODE=standalone' >> "${etc}/nut.conf"
+    echo 'MODE=standalone' >>"${etc}/nut.conf"
 fi
 
 if grep -q "^\[${ups}\]" "${etc}/ups.conf"; then
@@ -51,8 +51,8 @@ else
     if ! grep -q '^maxretry' "${etc}/ups.conf"; then
         sed -i '1i maxretry = 3' "${etc}/ups.conf"
     fi
-    printf '\n' >> "${etc}/ups.conf"
-    grep -v '^#' "${template}" | sed '/./,$!d' >> "${etc}/ups.conf"
+    printf '\n' >>"${etc}/ups.conf"
+    grep -v '^#' "${template}" | sed '/./,$!d' >>"${etc}/ups.conf"
 fi
 
 # "panel" gets only the commands the plugin's buttons send. Never give it
@@ -74,7 +74,7 @@ install -m 640 -o root -g nut /dev/stdin "${etc}/upsd.users" <<EOF
 EOF
 
 sed -i '/^MONITOR /d' "${etc}/upsmon.conf"
-echo "MONITOR ${ups}@localhost 1 upsmon ${upsmon_password} primary" >> "${etc}/upsmon.conf"
+echo "MONITOR ${ups}@localhost 1 upsmon ${upsmon_password} primary" >>"${etc}/upsmon.conf"
 
 install -d -m 700 -o "${user}" -g "${group}" "${home}/.config/nut"
 printf '%s\n' "${panel_password}" |

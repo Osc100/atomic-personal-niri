@@ -44,9 +44,17 @@ eq(ev[1].at, 100, "outage dated to its first reading")
 eq(ev[1].category, "outages", "outage category")
 eq(st.runtimeFullSec, 2700, "reference kept on battery")
 
-ev = tracker.observe(st, snap({ status = "low_battery", onBattery = true, lowBattery = true, batteryPct = 30, runtimeSec = 300 }), 400)
+ev = tracker.observe(
+  st,
+  snap({ status = "low_battery", onBattery = true, lowBattery = true, batteryPct = 30, runtimeSec = 300 }),
+  400
+)
 eq(keys(ev), "low_battery", "low battery")
-eq(keys(tracker.observe(st, snap({ status = "low_battery", onBattery = true, lowBattery = true, batteryPct = 29 }), 401)), "", "low battery once")
+eq(
+  keys(tracker.observe(st, snap({ status = "low_battery", onBattery = true, lowBattery = true, batteryPct = 29 }), 401)),
+  "",
+  "low battery once"
+)
 
 ev = tracker.observe(st, snap({ batteryPct = 31, runtimeSec = 900 }), 700)
 eq(keys(ev), "power_restored", "power restored")
@@ -69,7 +77,11 @@ eq(keys(tracker.observe(st, snap({ line = "buck" }), 1030)), "boost_off,buck_on"
 -- Other critical flags
 eq(keys(tracker.observe(st, snap({ line = "buck", overload = true }), 1100)), "overload", "overload")
 eq(keys(tracker.observe(st, snap({ line = "buck", status = "fault" }), 1101)), "fault", "fault")
-eq(keys(tracker.observe(st, snap({ line = "buck", replaceBattery = true }), 1102)), "replace_battery", "replace battery")
+eq(
+  keys(tracker.observe(st, snap({ line = "buck", replaceBattery = true }), 1102)),
+  "replace_battery",
+  "replace battery"
+)
 
 -- Self-tests run on battery but are not outages
 local function outageKeys(events)
@@ -136,7 +148,11 @@ eq(ev[1].category, "self_test", "test category")
 ev = tracker.observe(st, snap({ test = { result = "passed", text = "Passed", at = 1760000000 } }), 60)
 eq(keys(ev), "test_passed", "test passed")
 eq(ev[1].at, 1760000000, "test uses pwrstat's time")
-eq(keys(tracker.observe(st, snap({ test = { result = "passed", text = "Passed", at = 1760000000 } }), 61)), "", "same test once")
+eq(
+  keys(tracker.observe(st, snap({ test = { result = "passed", text = "Passed", at = 1760000000 } }), 61)),
+  "",
+  "same test once"
+)
 
 -- NUT self-test without timestamps
 st = tracker.newState(nil)

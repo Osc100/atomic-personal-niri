@@ -307,46 +307,68 @@ local function gaugesLayout(ctx, level: string, lost: boolean)
   local bars = activeBars()
   if #bars == 0 then
     if #children == 0 then
-      table.insert(children, label(noctalia.tr("gauges.empty"), CAPTION, "on_surface_variant", { width = W, maxLines = 2 }))
+      table.insert(
+        children,
+        label(noctalia.tr("gauges.empty"), CAPTION, "on_surface_variant", { width = W, maxLines = 2 })
+      )
     end
   elseif gaugeCfg.layout == "columns" then
     local colW = math.floor(W / math.max(#bars, 1))
     local columns = {}
     for _, bar in bars do
-      table.insert(columns, ui.column({ width = colW, gap = 6, align = "center" }, {
-        glyph(shared.statIcon(bar.stat, snap), 18, bar.color),
-        ui.progress({
-          progress = shared.gaugeFraction(bar.stat, snap),
-          fill = bar.color, track = TRACK, radius = 3, width = colW - 16, height = 6,
-        }),
-        label(shared.formatStat(bar.stat, snap), CAPTION, "on_surface", { fontWeight = "medium" }),
-      }))
+      table.insert(
+        columns,
+        ui.column({ width = colW, gap = 6, align = "center" }, {
+          glyph(shared.statIcon(bar.stat, snap), 18, bar.color),
+          ui.progress({
+            progress = shared.gaugeFraction(bar.stat, snap),
+            fill = bar.color,
+            track = TRACK,
+            radius = 3,
+            width = colW - 16,
+            height = 6,
+          }),
+          label(shared.formatStat(bar.stat, snap), CAPTION, "on_surface", { fontWeight = "medium" }),
+        })
+      )
     end
     table.insert(children, ui.row({ width = W, opacity = dim }, columns))
   elseif gaugeCfg.layout == "pills" then
     local groups = { ui.spacer({ flexGrow = 1 }) }
     for _, bar in bars do
-      table.insert(groups, ui.row({ gap = 7, align = "center" }, {
-        glyph(shared.statIcon(bar.stat, snap), 16, bar.color),
-        pill(shared.gaugeFraction(bar.stat, snap), bar.color),
-        label(shared.formatStat(bar.stat, snap), CAPTION, "on_surface", { fontWeight = "medium" }),
-      }))
+      table.insert(
+        groups,
+        ui.row({ gap = 7, align = "center" }, {
+          glyph(shared.statIcon(bar.stat, snap), 16, bar.color),
+          pill(shared.gaugeFraction(bar.stat, snap), bar.color),
+          label(shared.formatStat(bar.stat, snap), CAPTION, "on_surface", { fontWeight = "medium" }),
+        })
+      )
       table.insert(groups, ui.spacer({ flexGrow = 1 }))
     end
     table.insert(children, ui.row({ width = W, align = "center", opacity = dim }, groups))
   else
     local valueW = 76 -- room for "23 h 59 min"
     for _, bar in bars do
-      table.insert(children, ui.row({ width = W, gap = 10, align = "center", opacity = dim }, {
-        glyph(shared.statIcon(bar.stat, snap), 16, bar.color),
-        ui.progress({
-          progress = shared.gaugeFraction(bar.stat, snap),
-          fill = bar.color, track = TRACK, radius = 3, width = W - 16 - valueW - 20, height = 6,
-        }),
-        label(shared.formatStat(bar.stat, snap), CAPTION, "on_surface", {
-          width = valueW, textAlign = "end", fontWeight = "medium",
-        }),
-      }))
+      table.insert(
+        children,
+        ui.row({ width = W, gap = 10, align = "center", opacity = dim }, {
+          glyph(shared.statIcon(bar.stat, snap), 16, bar.color),
+          ui.progress({
+            progress = shared.gaugeFraction(bar.stat, snap),
+            fill = bar.color,
+            track = TRACK,
+            radius = 3,
+            width = W - 16 - valueW - 20,
+            height = 6,
+          }),
+          label(shared.formatStat(bar.stat, snap), CAPTION, "on_surface", {
+            width = valueW,
+            textAlign = "end",
+            fontWeight = "medium",
+          }),
+        })
+      )
     end
   end
   return ui.column({ width = W, gap = 9 }, children)
@@ -364,10 +386,13 @@ local function readoutLayout(ctx, level: string, lost: boolean)
       local value = shared.rowValue(row.key, snap, ctx)
       if value ~= nil then
         local valueColor = if row.key == "state" then shared.levelColor(level, colors.base2, colors) else "on_surface"
-        table.insert(rows, ui.row({ width = W, gap = 12, align = "start", opacity = if lost then DIM else 1 }, {
-          label(noctalia.tr("rows." .. row.key), CAPTION, "on_surface_variant"),
-          label(value, CAPTION, valueColor, { flexGrow = 1, textAlign = "end", maxLines = 2, fontWeight = "medium" }),
-        }))
+        table.insert(
+          rows,
+          ui.row({ width = W, gap = 12, align = "start", opacity = if lost then DIM else 1 }, {
+            label(noctalia.tr("rows." .. row.key), CAPTION, "on_surface_variant"),
+            label(value, CAPTION, valueColor, { flexGrow = 1, textAlign = "end", maxLines = 2, fontWeight = "medium" }),
+          })
+        )
       end
     end
   end

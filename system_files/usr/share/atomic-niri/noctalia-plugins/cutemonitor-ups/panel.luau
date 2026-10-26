@@ -111,7 +111,12 @@ end
 local function keyValue(key: string, value: string, color: string?)
   return ui.row({ gap = 12, align = "start" }, {
     label(key, CAPTION, "on_surface_variant"),
-    label(value, CAPTION, color or "on_surface", { flexGrow = 1, textAlign = "end", maxLines = 2, fontWeight = "medium" }),
+    label(
+      value,
+      CAPTION,
+      color or "on_surface",
+      { flexGrow = 1, textAlign = "end", maxLines = 2, fontWeight = "medium" }
+    ),
   })
 end
 
@@ -233,19 +238,22 @@ local function graphCard(now: number, lost: boolean)
 
   local chips = {}
   for _, s in SPANS do
-    table.insert(chips, ui.button({
-      key = `span-{s}`,
-      text = noctalia.tr("panel.span." .. s),
-      variant = "ghost",
-      controlSize = "sm",
-      fontSize = SMALL,
-      selected = s == span,
-      onClick = function()
-        span = s
-        hoverIndex = nil
-        render()
-      end,
-    }))
+    table.insert(
+      chips,
+      ui.button({
+        key = `span-{s}`,
+        text = noctalia.tr("panel.span." .. s),
+        variant = "ghost",
+        controlSize = "sm",
+        fontSize = SMALL,
+        selected = s == span,
+        onClick = function()
+          span = s
+          hoverIndex = nil
+          render()
+        end,
+      })
+    )
   end
 
   local readout
@@ -310,19 +318,28 @@ local function protectionCard()
   local config = policy and policy.config
   if policy and policy.source == "pwrstat" and config then
     local fail = config.powerFail or {}
-    table.insert(rows, keyValue(
-      noctalia.tr("protection.power_failure"),
-      if fail.shutdown
-        then noctalia.tr("protection.shutdown_after", { time = shared.formatRuntime(fail.delaySec or 0) })
-        else noctalia.tr("protection.no_shutdown")
-    ))
+    table.insert(
+      rows,
+      keyValue(
+        noctalia.tr("protection.power_failure"),
+        if fail.shutdown
+          then noctalia.tr("protection.shutdown_after", { time = shared.formatRuntime(fail.delaySec or 0) })
+          else noctalia.tr("protection.no_shutdown")
+      )
+    )
     local low = config.lowBattery or {}
     local lowText = lowBatteryText(low.capacityPct, low.runtimeSec, low.shutdown)
     if lowText then
       table.insert(rows, keyValue(noctalia.tr("protection.low_battery"), lowText))
     end
     if config.alarm ~= nil then
-      table.insert(rows, keyValue(noctalia.tr("protection.alarm"), noctalia.tr(if config.alarm then "protection.on" else "protection.off")))
+      table.insert(
+        rows,
+        keyValue(
+          noctalia.tr("protection.alarm"),
+          noctalia.tr(if config.alarm then "protection.on" else "protection.off")
+        )
+      )
     end
   elseif snap and snap.source == "nut" then
     table.insert(rows, keyValue(noctalia.tr("protection.power_failure"), noctalia.tr("protection.nut_upsmon")))
@@ -351,10 +368,17 @@ local function buildEventRows(now: number)
     if event.durationSec then
       table.insert(details, shared.formatRuntime(event.durationSec))
     end
-    table.insert(rows, ui.row({ key = `event-{i}`, gap = 8, align = "start" }, {
-      label(shared.eventText({ key = event.key, text = event.text }, dateStyle, now) or "", CAPTION, EVENT_COLORS[event.key] or "on_surface"),
-      label(table.concat(details, " · "), SMALL, "on_surface_variant", { flexGrow = 1, textAlign = "end" }),
-    }))
+    table.insert(
+      rows,
+      ui.row({ key = `event-{i}`, gap = 8, align = "start" }, {
+        label(
+          shared.eventText({ key = event.key, text = event.text }, dateStyle, now) or "",
+          CAPTION,
+          EVENT_COLORS[event.key] or "on_surface"
+        ),
+        label(table.concat(details, " · "), SMALL, "on_surface_variant", { flexGrow = 1, textAlign = "end" }),
+      })
+    )
   end
   if #rows == 0 then
     table.insert(rows, label(noctalia.tr("panel.events_empty"), CAPTION, "on_surface_variant"))
@@ -460,10 +484,13 @@ local function actionsBar()
     }),
   }
   if reply ~= nil then
-    table.insert(children, label(reply.message or "", SMALL, if reply.ok then "on_surface_variant" else "error", {
-      width = W,
-      maxLines = 3,
-    }))
+    table.insert(
+      children,
+      label(reply.message or "", SMALL, if reply.ok then "on_surface_variant" else "error", {
+        width = W,
+        maxLines = 3,
+      })
+    )
   end
   return ui.column({ width = W, gap = 6 }, children)
 end

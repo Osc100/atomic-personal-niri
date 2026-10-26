@@ -53,7 +53,9 @@ eq(s.lowBattery, false, "idle low battery")
 
 -- Timestamps in every season read back as printed: winter time, both sides
 -- of the US spring-forward and fall-back changes.
-for _, printed in { "2026/01/15 07:05:09", "2026/03/08 01:30:00", "2026/03/08 03:30:00", "2026/11/01 00:30:00", "2026/11/01 03:30:00" } do
+for _, printed in
+  { "2026/01/15 07:05:09", "2026/03/08 01:30:00", "2026/03/08 03:30:00", "2026/11/01 00:30:00", "2026/11/01 03:30:00" }
+do
   local text = fixtures.real_status_idle:gsub("Passed at [%d/]+ [%d:]+", "Passed at " .. printed)
   eq(localText(pwrstat.parseStatus(text).test.at), printed, "test time " .. printed)
 end

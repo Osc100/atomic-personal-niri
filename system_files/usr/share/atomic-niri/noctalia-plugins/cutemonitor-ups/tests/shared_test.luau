@@ -37,9 +37,16 @@ eq(shared.formatRuntime(11400), "3 h 10 min", "runtime 190 min")
 
 -- Stat text
 local snap = {
-  batteryPct = 100, loadPct = 18, loadW = 180, runtimeSec = 2700,
-  inputV = 111.0, outputV = 110.6, inputHz = 60.0, outputHz = 59.94,
-  ratingPowerW = 1000, ratingPowerVA = 1500,
+  batteryPct = 100,
+  loadPct = 18,
+  loadW = 180,
+  runtimeSec = 2700,
+  inputV = 111.0,
+  outputV = 110.6,
+  inputHz = 60.0,
+  outputHz = 59.94,
+  ratingPowerW = 1000,
+  ratingPowerVA = 1500,
 }
 eq(shared.formatStat("battery_pct", snap), "100%", "battery text")
 eq(shared.formatStat("load_pct", snap), "18%", "load % text")
@@ -93,7 +100,11 @@ eq(shared.statColor("load_pct", { loadPct = 80 }, "primary", COLORS, 80), "error
 eq(shared.statColor("load_w", { loadPct = 79 }, "primary", COLORS, 80), "primary", "load below threshold")
 eq(shared.statColor("load_w", { loadPct = 10, overload = true }, "primary", COLORS, 80), "error", "overload flag")
 eq(shared.statColor("battery_pct", { onBattery = true }, "primary", COLORS, 80), "tertiary", "battery on battery")
-eq(shared.statColor("runtime", { onBattery = true, lowBattery = true }, "primary", COLORS, 80), "error", "runtime low battery")
+eq(
+  shared.statColor("runtime", { onBattery = true, lowBattery = true }, "primary", COLORS, 80),
+  "error",
+  "runtime low battery"
+)
 eq(shared.statColor("input_v", { onBattery = true }, "primary", COLORS, 80), "primary", "volts stay base")
 eq(shared.statColor("battery_pct", nil, "primary", COLORS, 80), "primary", "no snapshot")
 
@@ -147,7 +158,11 @@ near(shared.gaugeFraction("battery_pct", { batteryPct = 87 }), 0.87, "gauge batt
 near(shared.gaugeFraction("load_w", snap), 0.18, "gauge watts")
 near(shared.gaugeFraction("runtime", { runtimeSec = 1140, runtimeFullSec = 2280 }), 0.5, "gauge runtime half")
 near(shared.gaugeFraction("runtime", { runtimeSec = 2280 }), 1, "gauge runtime without reference")
-near(shared.gaugeFraction("input_v", { inputV = 111, transferLowV = 88, transferHighV = 139 }), 23 / 51, "gauge volts transfer")
+near(
+  shared.gaugeFraction("input_v", { inputV = 111, transferLowV = 88, transferHighV = 139 }),
+  23 / 51,
+  "gauge volts transfer"
+)
 near(shared.gaugeFraction("input_v", { inputV = 120, ratingVoltage = 120 }), 0.5, "gauge volts nominal")
 near(shared.gaugeFraction("input_hz", { inputHz = 60 }), 0.5, "gauge 60 Hz")
 near(shared.gaugeFraction("input_hz", { inputHz = 50 }), 0.5, "gauge 50 Hz")

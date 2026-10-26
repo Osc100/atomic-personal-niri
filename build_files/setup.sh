@@ -15,7 +15,7 @@ jq '.transports.docker["ghcr.io/osc100/atomic-personal-niri"] = [{
     "type": "sigstoreSigned",
     "keyPath": "/etc/pki/containers/atomic-personal-niri.pub",
     "signedIdentity": { "type": "matchRepository" }
-}]' /etc/containers/policy.json > /tmp/policy.json
+}]' /etc/containers/policy.json >/tmp/policy.json
 cp /tmp/policy.json /etc/containers/policy.json
 
 systemctl enable podman.socket

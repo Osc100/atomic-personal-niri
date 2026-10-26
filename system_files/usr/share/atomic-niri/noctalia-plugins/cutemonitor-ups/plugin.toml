@@ -520,7 +520,6 @@ entry = "desktop.luau"
   default = "error"
 
 # Bar item
-
 [[widget]]
 id = "bar"
 entry = "bar.luau"
@@ -640,7 +639,6 @@ entry = "bar.luau"
 
 # Power item: a laptop's power draw beside a plug. Hidden without a system
 # battery, so it can sit in a bar shared with machines that have none.
-
 [[widget]]
 id = "power"
 entry = "power.luau"

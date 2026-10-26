@@ -173,14 +173,16 @@ end
 -- "Over Voltage" -> "Over voltage"; all-caps words such as "AVR" stay as they are.
 function M.sentenceCase(text: string): string
   local index = 0
-  return (text:gsub("%a+", function(word)
-    index += 1
-    if #word > 1 and word == word:upper() then
-      return word
-    end
-    local lower = word:lower()
-    return if index == 1 then lower:sub(1, 1):upper() .. lower:sub(2) else lower
-  end))
+  return (
+    text:gsub("%a+", function(word)
+      index += 1
+      if #word > 1 and word == word:upper() then
+        return word
+      end
+      local lower = word:lower()
+      return if index == 1 then lower:sub(1, 1):upper() .. lower:sub(2) else lower
+    end)
+  )
 end
 
 -- Fills values a source leaves out but that follow from what it reports:
@@ -211,7 +213,12 @@ function M.level(snap, link): string
     return "none"
   elseif (link ~= nil and link.state == "lost") or snap.status == "lost_comm" then
     return "lost"
-  elseif ALERT_STATUSES[snap.status] or snap.overload or snap.replaceBattery or (snap.lowBattery and snap.onBattery) then
+  elseif
+    ALERT_STATUSES[snap.status]
+    or snap.overload
+    or snap.replaceBattery
+    or (snap.lowBattery and snap.onBattery)
+  then
     return "alert"
   elseif snap.onBattery or snap.status == "bypass" or snap.status == "calibrating" then
     return "warning"

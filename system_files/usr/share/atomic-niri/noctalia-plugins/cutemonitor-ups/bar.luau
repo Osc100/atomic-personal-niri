@@ -54,7 +54,10 @@ local function drawnBattery(pct: number?, color: string?)
     table.insert(level, ui.box({ width = filled, height = 7, radius = 1.5, fill = ink }))
   end
   return ui.row({ gap = 1, align = "center" }, {
-    ui.row({ width = 24, height = 12, padding = 2.5, radius = 3, border = ink, borderWidth = 1.3, align = "center" }, level),
+    ui.row(
+      { width = 24, height = 12, padding = 2.5, radius = 3, border = ink, borderWidth = 1.3, align = "center" },
+      level
+    ),
     ui.box({ width = 2, height = 5, radius = 1, fill = ink }),
   })
 end
@@ -76,9 +79,12 @@ local function meter(pct: number?, color: string, vertical: boolean)
   end
   local level = {}
   if filled > 0 then
-    table.insert(level, if vertical
-      then ui.box({ width = filled, height = METER_THICKNESS, radius = METER_THICKNESS / 2, fill = color })
-      else ui.box({ width = METER_THICKNESS, height = filled, radius = METER_THICKNESS / 2, fill = color }))
+    table.insert(
+      level,
+      if vertical
+        then ui.box({ width = filled, height = METER_THICKNESS, radius = METER_THICKNESS / 2, fill = color })
+        else ui.box({ width = METER_THICKNESS, height = filled, radius = METER_THICKNESS / 2, fill = color })
+    )
   end
   local track = {
     width = if vertical then METER_LENGTH else METER_THICKNESS,
@@ -145,7 +151,9 @@ local function render()
   elseif displayMode ~= "none" or not showLabel or snap == nil then
     -- The battery glyph follows the charge; with no UPS or no contact the power
     -- glyph says so either way.
-    local glyph = if iconKind == "battery" and level ~= "none" and level ~= "lost"
+    local glyph = if iconKind == "battery"
+        and level ~= "none"
+        and level ~= "lost"
       then shared.batteryIcon(snap.batteryPct)
       else shared.powerIcon(snap, level)
     table.insert(children, ui.glyph({ name = glyph, color = iconColor or tint(iconColorSetting) }))
