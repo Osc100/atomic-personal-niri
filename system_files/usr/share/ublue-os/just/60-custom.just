@@ -2,6 +2,10 @@
 setup-nut:
     sudo /usr/libexec/atomic-niri/setup-nut "$USER"
 
+# Undo setup-nut: stop NUT and put Fedora's /etc/ups back
+remove-nut:
+    sudo /usr/libexec/atomic-niri/remove-nut "$USER"
+
 # Copy the image's niri config to ~/.config/niri (the old one is backed up)
 niri-config:
     #!/usr/bin/bash

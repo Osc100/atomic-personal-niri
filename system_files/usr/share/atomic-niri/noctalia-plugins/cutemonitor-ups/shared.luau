@@ -19,6 +19,7 @@ M.KEYS = {
   test = "cmups.test", -- last self-test { result, text, at }, tracked for both sources
   request = "cmups.request", -- panel -> service: { id, action }
   reply = "cmups.reply", -- service -> panel: { id, ok, message }
+  systemBattery = "cmups.system_battery", -- { present, watts, status } of a laptop's own battery
 }
 
 -- Graph history, one key per span so an entry only receives the span it shows.
@@ -534,6 +535,57 @@ function M.detailText(detailKey: string, snap, ctx): string?
     return M.formatStat(detailKey, snap)
   end
   return nil
+end
+
+-- The system's own battery
+
+-- A laptop's battery, read from sysfs, where UPower gets the power draw the
+-- Control Center's Power tab shows. A battery with scope "Device" (a mouse, a
+-- gamepad) is not the system's. Prints "battery <µW or -> <status>", or
+-- "none"; power_now is µW, and a battery without it reports µA and µV.
+-- CMUPS_POWER_SUPPLY points it at a fake tree for testing.
+M.SYSTEM_BATTERY_ARGV = {
+  "sh",
+  "-c",
+  [[
+for d in "${CMUPS_POWER_SUPPLY:-/sys/class/power_supply}"/*; do
+  [ "$(cat "$d/type" 2>/dev/null)" = Battery ] || continue
+  [ "$(cat "$d/scope" 2>/dev/null || echo System)" = System ] || continue
+  [ "$(cat "$d/present" 2>/dev/null || echo 1)" = 1 ] || continue
+  uw=$(cat "$d/power_now" 2>/dev/null)
+  if [ -z "$uw" ]; then
+    ua=$(cat "$d/current_now" 2>/dev/null)
+    uv=$(cat "$d/voltage_now" 2>/dev/null)
+    if [ -n "$ua" ] && [ -n "$uv" ]; then uw=$((ua * uv / 1000000)); fi
+  fi
+  echo "battery ${uw:--} $(cat "$d/status" 2>/dev/null || echo Unknown)"
+  exit 0
+done
+echo none
+]],
+}
+
+-- The probe's output as { present, watts, status }. watts is nil when the
+-- battery gives no power reading, and always positive: some report a
+-- discharge as negative.
+function M.parseSystemBattery(text: string)
+  local uw, status = string.match(text, "^battery%s+(%S+)%s+(%S+)")
+  if uw == nil then
+    return { present = false }
+  end
+  local n = tonumber(uw)
+  return { present = true, watts = if n then math.abs(n) / 1e6 else nil, status = status }
+end
+
+-- Watts as Noctalia's own battery widget shows them in a bar: whole watts,
+-- no space, and "<1W" below one.
+function M.formatWatts(watts: number?): string
+  if watts == nil then
+    return "–"
+  elseif watts > 0 and watts < 1 then
+    return "<1W"
+  end
+  return `{math.floor(watts + 0.5)}W`
 end
 
 return M

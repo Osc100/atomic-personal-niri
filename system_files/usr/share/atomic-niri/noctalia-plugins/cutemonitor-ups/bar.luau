@@ -18,6 +18,7 @@ local labelStyle = noctalia.getConfig("label_style") or "text"
 local iconColorSetting = noctalia.getConfig("icon_color") or ""
 local iconKind = noctalia.getConfig("icon") or "power"
 local onlyOnBattery = noctalia.getConfig("only_on_battery") == true
+local hideWithSystemBattery = noctalia.getConfig("hide_with_system_battery") ~= false
 local colors = {
   warning = noctalia.getConfig("warning_color") or "tertiary",
   alert = noctalia.getConfig("alert_color") or "error",
@@ -35,6 +36,7 @@ local CONTENT = {
 
 local snap = noctalia.state.get(KEYS.snapshot)
 local link = noctalia.state.get(KEYS.link)
+local systemBattery = noctalia.state.get(KEYS.systemBattery)
 
 -- "" from the shared color rules means "the bar's own color": pass nil so the
 -- host default applies.
@@ -127,7 +129,9 @@ local function render()
     noctalia.setUpdateInterval(wanted)
   end
 
-  local visible = not onlyOnBattery or (snap ~= nil and snap.onBattery == true)
+  -- A laptop shows its own battery instead (the power item and Noctalia's).
+  local laptop = hideWithSystemBattery and systemBattery ~= nil and systemBattery.present == true
+  local visible = not laptop and (not onlyOnBattery or (snap ~= nil and snap.onBattery == true))
   barWidget.setVisible(visible)
   if not visible then
     return
@@ -183,6 +187,10 @@ noctalia.state.watch(KEYS.snapshot, function(value)
 end)
 noctalia.state.watch(KEYS.link, function(value)
   link = value
+  render()
+end)
+noctalia.state.watch(KEYS.systemBattery, function(value)
+  systemBattery = value
   render()
 end)
 

@@ -499,10 +499,47 @@ noctalia.state.watch(KEYS.request, function(request)
   runAction(request.id, request.action)
 end)
 
+-- The system's own battery, for the UPS items to give way to and the power
+-- item to show. Published only when it changes, since every bar item watching
+-- it re-renders.
+
+local batteryProbing = false
+local batteryShown = nil -- the last value published, as JSON
+local batterySimulated = nil -- a fake reading from onIpc("battery", ...)
+
+local function publishBattery(value)
+  local text = noctalia.json.encode(value)
+  if text ~= batteryShown then
+    batteryShown = text
+    noctalia.state.set(KEYS.systemBattery, value)
+  end
+end
+
+local function probeSystemBattery()
+  if batterySimulated ~= nil then
+    publishBattery(batterySimulated)
+    return
+  end
+  if batteryProbing then
+    return
+  end
+  batteryProbing = true
+  local started = noctalia.runAsync(shared.SYSTEM_BATTERY_ARGV, function(result)
+    batteryProbing = false
+    if not result.timedOut then
+      publishBattery(shared.parseSystemBattery(result.stdout))
+    end
+  end, COMMAND_TIMEOUT_MS)
+  if not started then
+    batteryProbing = false
+  end
+end
+
 -- Entry points
 
 -- Noctalia calls update() right after this script loads, then on the interval.
 function update()
+  probeSystemBattery()
   local now = os.time()
   if active ~= nil then
     poll()
@@ -516,8 +553,21 @@ end
 --   simulate on_battery|low_battery|overload|lost|no_ups|off   preview a state
 --   refresh                                                    poll now
 --   dump                                                       log the current state
+--   battery <watts>|off                                        pretend to be a laptop
 function onIpc(event, payload)
-  if event == "simulate" then
+  if event == "battery" then
+    local value = noctalia.string.trim(payload or "")
+    local watts = tonumber(value)
+    if value == "off" or value == "" then
+      batterySimulated = nil
+    elseif watts ~= nil then
+      batterySimulated = { present = true, watts = watts, status = "Discharging" }
+    else
+      noctalia.log(`cutemonitor-ups: battery takes watts or "off", not "{value}"`)
+      return
+    end
+    probeSystemBattery()
+  elseif event == "simulate" then
     local name = noctalia.string.trim(payload or "")
     if name == "off" or name == "" then
       simulation = nil

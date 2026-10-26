@@ -13,7 +13,7 @@
 
 id = "osc/cutemonitor-ups"
 name = "CuteMonitor — UPS Status (local)"
-version = "0.1.0"
+version = "0.2.0"
 # API 29 is for the panel graph's hover tracking; nothing else needs more
 # than 24.
 plugin_api = 29
@@ -618,6 +618,13 @@ entry = "bar.luau"
   default = false
 
   [[widget.setting]]
+  key = "hide_with_system_battery"
+  type = "bool"
+  label_key = "settings.hide_with_system_battery.label"
+  description_key = "settings.hide_with_system_battery.description"
+  default = true
+
+  [[widget.setting]]
   key = "warning_color"
   type = "color"
   label_key = "settings.warning_color.label"
@@ -630,6 +637,13 @@ entry = "bar.luau"
   label_key = "settings.alert_color.label"
   description_key = "settings.alert_color.description"
   default = "error"
+
+# Power item: a laptop's power draw beside a plug. Hidden without a system
+# battery, so it can sit in a bar shared with machines that have none.
+
+[[widget]]
+id = "power"
+entry = "power.luau"
 
 # Detail panel
 # Placement, position, layer and open-near-click are added by Noctalia itself

@@ -192,6 +192,22 @@ eq(shared.lastPowerEvent({ log[4] }).key, "over_voltage", "line events count")
 eq(shared.lastPowerEvent({ log[1] }), nil, "no power event")
 eq(shared.lastPowerEvent(nil), nil, "no log")
 
+-- The system's own battery, as the probe prints it
+local bat = shared.parseSystemBattery("battery 11234000 Discharging\n")
+eq(bat.present, true, "laptop battery present")
+near(bat.watts, 11.234, "power_now µW to watts")
+eq(bat.status, "Discharging", "battery status")
+near(shared.parseSystemBattery("battery -9500000 Discharging\n").watts, 9.5, "negative discharge made positive")
+eq(shared.parseSystemBattery("battery - Unknown\n").watts, nil, "no power reading")
+eq(shared.parseSystemBattery("battery - Unknown\n").present, true, "present without a power reading")
+eq(shared.parseSystemBattery("none\n").present, false, "no system battery")
+eq(shared.parseSystemBattery("").present, false, "probe printed nothing")
+eq(shared.formatWatts(11.234), "11W", "whole watts")
+eq(shared.formatWatts(11.5), "12W", "watts round half up")
+eq(shared.formatWatts(0.4), "<1W", "under a watt")
+eq(shared.formatWatts(0), "0W", "no draw")
+eq(shared.formatWatts(nil), "–", "no reading")
+
 print(`{checks - failures}/{checks} checks passed`)
 if failures > 0 then
   error(`{failures} check(s) failed`)

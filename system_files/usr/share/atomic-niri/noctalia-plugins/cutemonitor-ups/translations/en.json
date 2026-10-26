@@ -384,6 +384,10 @@
     "warning_color": {
       "description": "Running on battery.",
       "label": "Warning Color"
+    },
+    "hide_with_system_battery": {
+      "label": "Hide on a Laptop",
+      "description": "Hide this item on a machine with its own battery, where the power item and Noctalia's battery widget show instead."
     }
   },
   "source": {
@@ -441,5 +445,9 @@
       "one": "{count} min ago",
       "other": "{count} min ago"
     }
+  },
+  "power": {
+    "draw": "Power draw",
+    "status": "Battery"
   }
 }

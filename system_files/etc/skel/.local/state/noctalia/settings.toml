@@ -14,7 +14,7 @@ font_family = "CaskaydiaCove Nerd Font Mono"
     enabled = true
     fill = "on_secondary"
     id = "g1"
-    members = [ "temp", "sysmon_2", "ups_load", "ups_battery", "sysmon_3" ]
+    members = [ "temp", "sysmon_2", "ups_load", "ups_battery", "sysmon_3", "power_draw", "battery" ]
     opacity = 1.0
     padding = 6.0
 

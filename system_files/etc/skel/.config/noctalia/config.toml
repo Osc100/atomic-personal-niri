@@ -219,6 +219,15 @@ icon_color = "on_surface"
 label_content = "battery"
 label_style = "meter"
 
+# On a laptop, at the end of the group: its power draw beside a plug, then its
+# battery. Both hide on a machine without a system battery, and the UPS items
+# above hide on one with.
+[widget.power_draw]
+type = "osc/cutemonitor-ups:power"
+
+[widget.battery]
+type = "battery"
+
 [widget.tray]
 capsule = true
 capsule_fill = "on_secondary"

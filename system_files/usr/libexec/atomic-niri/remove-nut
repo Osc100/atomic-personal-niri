@@ -1,0 +1,49 @@
+#!/usr/bin/bash
+# Undoes `ujust setup-nut`: stops and disables NUT, puts Fedora's own files back
+# in /etc/ups, and removes the Noctalia panel's login. Run it with
+# `ujust remove-nut`.
+#
+# Fedora's files come from /usr/etc, where ostree keeps the image's untouched
+# /etc, or failing that from the oldest backup setup-nut made. The files being
+# replaced are backed up first as <file>.bak.<timestamp>.
+
+set -euo pipefail
+
+if [[ ${EUID} -ne 0 ]]; then
+    echo "error: must run as root (use ujust remove-nut)." >&2
+    exit 1
+fi
+
+user="${1:?usage: remove-nut USER}"
+home="$(getent passwd "${user}" | cut -d: -f6)"
+if [[ -z ${home} ]]; then
+    echo "error: no user '${user}'." >&2
+    exit 1
+fi
+
+etc=/etc/ups
+
+systemctl disable --now nut-monitor.service nut-server.service nut-driver.target \
+    nut-driver-enumerator.path nut-driver-enumerator.service nut.target || true
+
+stamp="$(date +%Y%m%d%H%M%S)"
+for f in nut.conf ups.conf upsd.users upsmon.conf; do
+    if [[ -e /usr/etc/ups/${f} ]]; then
+        original="/usr/etc/ups/${f}"
+    else
+        original="$(ls "${etc}/${f}".bak.* 2>/dev/null | sort | head -n 1 || true)"
+    fi
+    if [[ -z ${original} ]]; then
+        echo "warn: no original of ${f} to restore; left as it is." >&2
+        continue
+    fi
+    cp -a "${etc}/${f}" "${etc}/${f}.bak.${stamp}"
+    install -m 640 -o root -g nut "${original}" "${etc}/${f}"
+done
+
+rm -f "${home}/.config/nut/panel-password"
+rmdir --ignore-fail-on-non-empty "${home}/.config/nut" 2>/dev/null || true
+
+restorecon -R "${etc}"
+
+echo "NUT is stopped and disabled, and /etc/ups is back to Fedora's files."
