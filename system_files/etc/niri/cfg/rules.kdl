@@ -13,10 +13,11 @@ window-rule {
     draw-border-with-background false
 }
 
+// Xray, niri's default once blur is on: windows show the blurred wallpaper behind them rather
+// than the windows underneath, blurred once and shared instead of redone whenever anything moves
 window-rule {
     background-effect {
         blur true
-        xray false
     }
 }
 
@@ -139,13 +140,7 @@ layer-rule {
 }
 
 // Noctalia asks for blur behind exactly what it draws of the bar, panels and notifications
-// (compositor_blur), so niri is left to give it that; only xray is turned off. Forcing blur here
-// blurred each surface's whole rectangle, the transparent shadow margin round it too, which hung a
-// blurred band under the bar and a blurred box round every notification over the windows: niri's
-// layer blur has nothing like Hyprland's ignore_alpha to leave the margin out.
-layer-rule {
-    match namespace=r#"^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$"#
-    background-effect {
-        xray false
-    }
-}
+// (compositor_blur), with xray as for windows, so there's no layer rule for them. Forcing blur in
+// one blurred each surface's whole rectangle, the transparent shadow margin round it too, which
+// hung a blurred band under the bar and a blurred box round every notification: niri's layer blur
+// has nothing like Hyprland's ignore_alpha to leave the margin out.
