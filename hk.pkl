@@ -5,11 +5,6 @@ import "package://github.com/jdx/hk/releases/download/v2.8.1/hk@2.8.1#/Builtins.
 // `hk check --all` / `hk fix --all` run them over the whole repo.
 local linters = new Mapping<String, Step> {
     ["taplo"] = Builtins.taplo_format
-    // the built-in step only takes .lua; the plugin is Luau
-    ["stylua"] = (Builtins.stylua) {
-        types = null
-        glob = List("**/*.luau")
-    }
     ["shfmt"] = Builtins.shfmt
     ["shellcheck"] = Builtins.shellcheck
     ["jactionlint"] = Builtins.jactionlint

@@ -4,5 +4,4 @@ hk = { version = "latest", workflow = "release.yml" }
 jactionlint = "latest"
 shellcheck = "latest"
 shfmt = "latest"
-stylua = "latest"
 taplo = "latest"

@@ -111,11 +111,6 @@ enabled = [ "noctalia/wallhaven", "teagar/niri-workspace-preview", "noctalia/scr
     location = "https://github.com/noctalia-dev/community-plugins"
     name = "community"
 
-    [[plugins.source]]
-    kind = "path"
-    location = "/usr/share/atomic-niri/noctalia-plugins"
-    name = "local"
-
 [shell]
 corner_radius_scale = 1.5000000223517418
 font_family = "CaskaydiaCove Nerd Font"

@@ -199,10 +199,10 @@ type = "sysmon"
 type = "noctalia/screen_recorder:recorder"
 
 # The UPS (Member's Selection ST-1500MS, through NUT as st1500) in the system group beside the
-# GPU, as two of the osc/cutemonitor-ups plugin's bar items (cutecaption's, kept as a local copy in
-# plugins-local/), each drawn as the group's own glyph and vertical gauge. A click on either opens
-# the UPS panel (graph, event log, self-test, mute); in an outage both turn the Alert colour and
-# add the runtime.
+# GPU, as two of the osc/cutemonitor-ups plugin's bar items (cutecaption's, not shipped in the image;
+# they show once it is installed under that id), each drawn as the group's own glyph and vertical
+# gauge. A click on either opens the UPS panel (graph, event log, self-test, mute); in an outage
+# both turn the Alert colour and add the runtime.
 #
 # The load, after the power source's icon: a plug on mains, a battery in an outage
 [widget.ups_load]
