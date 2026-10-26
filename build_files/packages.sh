@@ -18,11 +18,15 @@ dnf5 -y copr enable yalter/niri-git
 ### Desktop
 
 # The COPR's version (0.0.git.N) sorts below Fedora's niri 26.04, so without
-# --from-repo dnf picks Fedora's.
-dnf5 -y install --from-repo=copr:copr.fedorainfracloud.org:yalter:niri-git niri
+# --from-repo dnf picks Fedora's. Of what niri recommends, Noctalia replaces
+# waybar, fuzzel, mako, swaybg, swayidle and swaylock; kitty replaces alacritty
+# and oo7 gnome-keyring.
+dnf5 -y install --from-repo=copr:copr.fedorainfracloud.org:yalter:niri-git \
+    --exclude=alacritty,fuzzel,mako,swaybg,swayidle,swaylock,waybar \
+    --exclude='gnome-keyring*' niri
 dnf5 -y install --from-repo=terra noctalia-greeter gpu-screen-recorder satty
 
-dnf5 -y install \
+dnf5 -y install --exclude='gnome-keyring*' \
     noctalia \
     xwayland-satellite \
     greetd \
@@ -39,10 +43,6 @@ dnf5 -y install \
     nut \
     nut-client
 
-# oo7 replaces gnome-keyring, as on Fedora 45. niri and noctalia pull
-# gnome-keyring in as a weak dependency.
-dnf5 -y remove gnome-keyring gnome-keyring-pam
-
 ### Shell
 
 dnf5 -y install fish fastfetch
@@ -50,9 +50,10 @@ dnf5 -y install --from-repo=terra starship
 
 ### Apps and tools
 
-dnf5 -y install \
+# tree-sitter-cli recommends Node.js (about 100 MB with npm and its docs), which
+# it only needs to generate a parser from a grammar. Node comes from mise.
+dnf5 -y install --exclude='nodejs*' \
     kitty \
-    alacritty \
     nautilus \
     jetbrains-mono-fonts-all \
     google-noto-sans-fonts \

@@ -1,0 +1,4 @@
+# Read by bootc install and bootc-image-builder. The base declares no root
+# filesystem, and disk builds fail without one.
+[install.filesystem.root]
+type = "btrfs"
