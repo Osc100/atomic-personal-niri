@@ -1,0 +1,166 @@
+config_version = 15
+
+[backdrop]
+blur_intensity = 0.79999998211860657
+
+[bar.default]
+font_family = "CaskaydiaCove Nerd Font Mono"
+
+    [[bar.default.capsule_group]]
+    accordion = false
+    accordion_direction = "end"
+    border = ""
+    border_width = 1.0
+    enabled = true
+    fill = "on_secondary"
+    id = "g1"
+    members = [ "temp", "sysmon_2", "ups_load", "ups_battery", "sysmon_3" ]
+    opacity = 1.0
+    padding = 6.0
+
+[control_center]
+sidebar_section = "full"
+
+    [control_center.calendar]
+    show_events_card = false
+
+[hot_corners.top_left]
+action = "none"
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@DP-2", "lockscreen-login-box@DP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1024.0
+    cy = 1006.4000244140625
+    output = "DP-1"
+    placement_height = 1152.0
+    placement_width = 2048.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-2"]
+    box_height = 196.0
+    box_width = 720.0
+    cx = 576.0
+    cy = 1789.1556396484375
+    output = "DP-2"
+    placement_height = 2048.0
+    placement_width = 1152.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-2".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[plugin_settings."noctalia/wallhaven"]
+api_key = "BLoZxAROtQZDzfddFM7Sg3WzembkYgeB"
+
+[plugin_settings."osc/cutemonitor-ups"]
+data_source = "nut"
+panel_events = true
+panel_protection = true
+
+[plugins]
+enabled = [ "noctalia/wallhaven", "teagar/niri-workspace-preview", "noctalia/screen_recorder", "osc/cutemonitor-ups" ]
+
+    [[plugins.source]]
+    kind = "git"
+    location = "https://github.com/noctalia-dev/official-plugins"
+    name = "official"
+
+    [[plugins.source]]
+    kind = "git"
+    location = "https://github.com/noctalia-dev/community-plugins"
+    name = "community"
+
+    [[plugins.source]]
+    kind = "path"
+    location = "/usr/share/atomic-niri/noctalia-plugins"
+    name = "local"
+
+[shell]
+corner_radius_scale = 1.5000000223517418
+font_family = "CaskaydiaCove Nerd Font"
+
+    [shell.animation]
+    speed = 1.2000000178813934
+
+    [shell.screen_corners]
+    enabled = true
+    size = 16
+
+    [shell.screenshot]
+    confirm_region = true
+    copy_to_clipboard = true
+    show_cursor = true
+
+    [shell.window_switcher]
+    mru = true
+
+[theme]
+builtin = "Tokyo-Night"
+community_palette = "Catppuccin Frappe Blue"
+mode = "dark"
+wallpaper_scheme = "m3-rainbow"
+
+    [theme.templates]
+    builtin_ids = [ "alacritty", "btop", "gtk3", "gtk4", "hyprland", "kcolorscheme", "kitty", "niri", "qt", "scroll", "starship" ]
+
+[wallpaper.default]
+path = "/home/osc/Pictures/wallhaven-k8jljm.jpg"
+
+[wallpaper.last]
+path = "/home/osc/Pictures/wallhaven-k8jljm.jpg"
+
+[wallpaper.monitors.DP-1]
+path = "/home/osc/Pictures/wallhaven-k8jljm.jpg"
+
+[wallpaper.monitors.DP-2]
+path = "/home/osc/Pictures/wallhaven-k8jljm.jpg"
+
+[widget.active_window]
+display = "icon_only"
+
+[widget.wallhaven]
+type = "noctalia/wallhaven:wallhaven"

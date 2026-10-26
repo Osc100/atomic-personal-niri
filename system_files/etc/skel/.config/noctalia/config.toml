@@ -1,0 +1,245 @@
+[accessibility]
+ui_scale = 1.20
+
+# The blurred, tinted wallpaper behind niri's overview; niri.kdl's place-within-backdrop rule is
+# what puts Noctalia's wallpaper there
+[backdrop]
+enabled = true
+
+# The control center's tiles: Noctalia's defaults, which listing any replaces, but for wifi, which
+# this machine has none of, and the screen recorder plugin's toggle after them (left click records,
+# right click the replay buffer)
+[[control_center.shortcuts]]
+type = "bluetooth"
+
+[[control_center.shortcuts]]
+type = "caffeine"
+
+[[control_center.shortcuts]]
+type = "nightlight"
+
+[[control_center.shortcuts]]
+type = "notification"
+
+[[control_center.shortcuts]]
+type = "power_profile"
+
+[[control_center.shortcuts]]
+type = "noctalia/screen_recorder:toggle"
+
+[bar.default]
+enabled = false # only the primary monitor gets a bar, see the DP-1 override below
+background_opacity = 0.60 # see-through enough for Hyprland's blur (compositor_blur) to show
+center = [ "clock", "notifications" ]
+concave_edge_corners = true
+end = [ "media", "spacer_1", "group:g1", "spacer_1", "tray", "recorder", "wallhaven", "brightness", "network", "volume", "session" ]
+margin_edge = 0
+margin_ends = 0
+radius_bottom_left = 12
+radius_bottom_right = 12
+radius_top_left = 0
+radius_top_right = 0
+scale = 1.10
+start = [ "workspaces", "niri_preview" ]
+thickness = 35
+
+    [[bar.default.capsule_group]]
+    border = ""
+    fill = "on_secondary"
+    id = "g1"
+    members = [ "temp", "sysmon_2", "ups_load", "ups_battery", "sysmon_3" ]
+    opacity = 1.0
+    padding = 6.0
+
+    [bar.default.monitor.DP-1]
+    enabled = true
+
+[shell]
+clipboard_image_action_command = "satty -f -"
+launch_apps_as_systemd_services = true
+polkit_agent = true
+settings_show_advanced = true
+time_format = "{:%I:%M %p}"
+# typing in niri's overview opens the launcher with what was typed, as GNOME's overview searches
+niri_overview_type_to_launch_enabled = true
+
+    [shell.greeter_sync]
+    auto_sync = true
+
+    [shell.panel]
+    transparency_mode = "glass"
+    open_near_click_control_center = true
+    session_placement = "floating"
+    session_position = "center"
+
+    [shell.screenshot]
+    copy_to_clipboard = false
+    pipe_command = "satty -f -"
+    pipe_to_command = true
+    save_to_file = false
+
+    [[shell.session.actions]]
+    action = "lock"
+    countdown_seconds = 0.0
+    enabled = true
+    shortcut = "1"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "logout"
+    countdown_seconds = 0.0
+    enabled = true
+    shortcut = "2"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "lock_and_suspend"
+    countdown_seconds = 3.0
+    enabled = true
+    shortcut = "3"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "reboot"
+    countdown_seconds = 3.0
+    enabled = true
+    shortcut = "4"
+    variant = "default"
+
+    [[shell.session.actions]]
+    action = "shutdown"
+    countdown_seconds = 3.0
+    enabled = true
+    shortcut = "5"
+    variant = "destructive"
+
+[brightness]
+enable_ddcutil = true # desktop monitors have no backlight; both answer DDC/CI over their DP cable
+
+[calendar]
+event_time_format = "%I:%M %p"
+
+[notification]
+background_opacity = 0.75
+
+[osd]
+background_opacity = 0.75
+
+# The screens go dark after five idle minutes, for the OLED. Only the screens: no lock and no
+# suspend, so whatever runs (a build, a Claude Code session) carries on, and any key or the mouse
+# wakes them. Once locked there is nothing to watch, so they go dark after thirty seconds instead.
+[idle.behavior.screen-off]
+action = "screen_off"
+enabled = true
+timeout = 300.0
+locked_timeout = 30.0
+
+[system.monitor]
+gpu_poll_seconds = 2
+
+[theme]
+mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "m3-tonal-spot"
+
+    [theme.templates]
+    builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "alacritty", "hyprland" ]
+
+    # niri's layout and border colours, in the palette; the built-in niri template is left off
+    # because it paints the focused border full-strength primary
+    [theme.templates.user.niri-layout]
+    input_path = "~/.config/noctalia/templates/niri-layout.kdl"
+    output_path = "~/.config/niri/cfg/layout.kdl"
+
+[widget.clock]
+color = "secondary"
+format = "{:%I:%M %p %A %m/%d/%y}"
+
+[widget.launcher]
+color = "secondary"
+
+[widget.media]
+hide_when_no_media = true
+title_scroll = "on_hover"
+
+[widget.network]
+color = "secondary"
+show_label = false
+
+[widget.notifications]
+color = "secondary"
+
+[widget.session]
+color = "error"
+
+[widget.spacer_1]
+type = "spacer"
+
+[widget.temp]
+show_value = false
+
+[widget.sysmon_2]
+glyph = "gpu-usage"
+show_value = false
+stat = "gpu_temp"
+type = "sysmon"
+
+[widget.sysmon_3]
+glyph = "cpu-2"
+show_value = false
+stat = "ram_used"
+type = "sysmon"
+
+# The screen recorder plugin's button: a click starts or stops a recording, and it shows while one
+# runs. Shift + Print and Mod + Shift + Print in niri's binds drive the same recorder
+[widget.recorder]
+type = "noctalia/screen_recorder:recorder"
+color = "secondary"
+
+# The UPS (Member's Selection ST-1500MS, through NUT as st1500) in the system group beside the
+# GPU, as two of the osc/cutemonitor-ups plugin's bar items (cutecaption's, kept as a local copy in
+# plugins-local/), each drawn as the group's own glyph and vertical gauge. A click on either opens
+# the UPS panel (graph, event log, self-test, mute); in an outage both turn the Alert colour and
+# add the runtime.
+#
+# The load, after the power source's icon: a plug on mains, a battery in an outage
+[widget.ups_load]
+type = "osc/cutemonitor-ups:bar"
+display_mode = "icon"
+icon_color = "on_surface"
+label_content = "load"
+label_style = "meter"
+
+# The battery's charge, after a battery glyph that follows it
+[widget.ups_battery]
+type = "osc/cutemonitor-ups:bar"
+display_mode = "icon"
+icon = "battery"
+icon_color = "on_surface"
+label_content = "battery"
+label_style = "meter"
+
+[widget.tray]
+capsule = true
+capsule_fill = "on_secondary"
+
+[widget.volume]
+color = "secondary"
+
+# GNOME's Activities indicator in shape: small dots on a rounded button, the current workspace a
+# long pill. The colours are left to Noctalia's defaults.
+[widget.workspaces]
+active_pill_size = 3.0
+capsule = true
+capsule_padding = 8.0
+inactive_pill_size = 1.0
+pill_scale = 0.60
+show_labels = false
+
+# niri's scrolling strip in miniature (the teagar/niri-workspace-preview plugin), one map per
+# monitor: its columns and stacks, with the windows on screen outlined, which is where in the strip
+# the view is
+[widget.niri_preview]
+type = "teagar/niri-workspace-preview:preview"
+viewport_mode = "highlight"
+output_scope = "current" # the bar is only on DP-1, so only its strip; the portrait one has no map
