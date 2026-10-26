@@ -1,0 +1,57 @@
+// A copy of what Noctalia generates from ~/.config/noctalia/templates/niri-layout.kdl. With the
+// config copied to ~/.config/niri, Noctalia keeps that copy's colours in step with the theme.
+//
+// The whole layout section lives here rather than only its colours, so niri never has to merge
+// two layout blocks from two files. Noctalia's built-in niri template is left off: it paints the
+// focused border in full-strength primary.
+
+layout {
+    // gaps between windows, plus struts, give the 3px-in / 8px-out spacing of the Hyprland setup
+    gaps 6
+    struts {
+        left 2
+        right 2
+        top 2
+        bottom 2
+    }
+
+    center-focused-column "never"
+    background-color "transparent" // Noctalia draws the wallpaper
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+    default-column-width { proportion 0.5; }
+
+    // One 2px border in the palette: a faint primary on the focused window, fainter text colour
+    // on the rest. The focus ring is the second, outer outline niri draws; one is enough.
+    focus-ring {
+        off
+    }
+
+    border {
+        width 2
+        active-color   "#ffb4aa4d"
+        inactive-color "#e2e2e21a"
+        urgent-color   "#ffb4ab"
+    }
+
+    tab-indicator {
+        active-color   "#ffb4aa"
+        inactive-color "#7d2b23"
+        urgent-color   "#ffb4ab"
+    }
+
+    insert-hint {
+        color "#ffb4aa80"
+    }
+}
+
+recent-windows {
+    highlight {
+        active-color "#ffb4aa"
+        urgent-color "#ffb4ab"
+    }
+}

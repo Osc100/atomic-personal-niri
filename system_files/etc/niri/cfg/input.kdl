@@ -1,0 +1,27 @@
+// ────────────── Input Configuration ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Input
+
+input {
+    keyboard {
+        xkb {
+            layout "us"
+            variant "altgr-intl"
+        }
+        numlock
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+    }
+
+    mouse {
+        accel-profile "flat"
+    }
+
+    // as Hyprland does by default; workspace-auto-back-and-forth is left off, so Super + N on the
+    // workspace already shown stays there as it did on Hyprland. max-scroll-amount 0% keeps hover
+    // from scrolling the view: a window fully on screen is focused by the pointer, one partly off
+    // it only by a click or a keybind, which is what brings it into view
+    focus-follows-mouse max-scroll-amount="0%"
+}

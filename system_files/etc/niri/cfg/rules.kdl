@@ -1,0 +1,151 @@
+// ────────────── Window & Layer Rules ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
+//
+// The Hyprland rules (~/.config/hypr/config/windowrules.lua and decorations.lua). Rules apply in
+// order, a later one overriding an earlier, so the general ones come first.
+
+// ─── Look ───
+window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+    // Without this niri fills the border's colour in behind the whole window, which shows through
+    // the windows the opacity rules below make see-through
+    draw-border-with-background false
+}
+
+window-rule {
+    background-effect {
+        blur true
+        xray false
+    }
+}
+
+// Slightly see-through, as Hyprland's active_opacity / inactive_opacity had it
+window-rule {
+    match is-active=true
+    opacity 0.95
+}
+window-rule {
+    match is-active=false
+    opacity 0.85
+}
+
+// Opaque: browsers, terminals (they set their own) and video
+window-rule {
+    match app-id=r#"^(firefox|zen|app\.zen_browser\.zen)$"#
+    match app-id=r#"^(kitty|ghostty|[Kk]onsole|Alacritty|gnome-terminal|xfce[0-9]?-terminal)$"#
+    match app-id=r#"^(mpv|io\.github\.celluloid_player\.Celluloid|org\.gnome\.Loupe|.*plex.*|.*vlc.*)$"#
+    opacity 1.0
+}
+
+// Terminals, though, are a touch see-through, more so once they lose focus: a terminal's own
+// background opacity cannot follow focus, so this is niri's, text and all, and kept light for that
+// reason
+window-rule {
+    match app-id=r#"^(kitty|ghostty|[Kk]onsole|Alacritty|gnome-terminal|xfce[0-9]?-terminal)$"# is-active=true
+    opacity 0.99
+}
+window-rule {
+    match app-id=r#"^(kitty|ghostty|[Kk]onsole|Alacritty|gnome-terminal|xfce[0-9]?-terminal)$"# is-active=false
+    opacity 0.98
+}
+
+// ─── Apps ───
+window-rule {
+    match title=r#"^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$"#
+    open-floating true
+    default-column-width { proportion 0.25; }
+    default-window-height { proportion 0.25; }
+    default-floating-position x=16 y=16 relative-to="bottom-right"
+}
+
+window-rule {
+    match app-id=r#"\.exe$"#
+    open-on-output "DP-1"
+}
+
+window-rule {
+    match app-id=r#"[Ll]auncher"#
+    open-floating true
+    open-on-output "DP-1"
+}
+
+window-rule {
+    match app-id=r#"^(vesktop|discord)$"#
+    open-on-output "DP-1"
+}
+
+window-rule {
+    match app-id=r#"[Cc]alc"#
+    open-floating true
+    default-column-width { fixed 350; }
+    default-window-height { fixed 500; }
+}
+
+window-rule {
+    match app-id=r#"^org\.kde\.keditfiletype$"#
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"^org\.kde\.ark$"#
+    default-column-width { proportion 0.4; }
+    default-window-height { proportion 0.4; }
+}
+
+window-rule {
+    match app-id="satty" title="^Satty$"
+    open-floating true
+    min-width 720
+    min-height 400
+}
+
+window-rule {
+    match app-id=r#"^(dev\.)?(noctalia\.Noctalia(\.Settings)?)$"#
+    open-floating true
+    default-column-width { proportion 0.7; }
+    default-window-height { proportion 0.7; }
+}
+
+// The file manager floats, as Dolphin did on Hyprland
+window-rule {
+    match app-id=r#"^org\.gnome\.Nautilus$"#
+    open-floating true
+    default-column-width { proportion 0.5; }
+    default-window-height { proportion 0.55; }
+}
+
+// ─── Floating utilities and dialogs ───
+window-rule {
+    match app-id=r#"^(kvantummanager|qt[56]ct|nwg-look)$"#
+    match app-id=r#"^(org\.pulseaudio\.pavucontrol|blueman-manager|nm-applet|nm-connection-editor)$"#
+    match title=r#"^(Winetricks.*|Protontricks.*)$"#
+    match title=r#"^(Open|Authentication Required|Add Folder to Workspace|Choose Files|Save As|Confirm to replace files|File Operation Progress)$"#
+    match title="^Open File$"
+    match app-id=r#"^[Xx]dg-desktop-portal-gtk$"#
+    match title=r#"^(File Upload|Choose wallpaper|Library)(.*)$"#
+    match app-id=r#"dialog"#
+    match title=r#"dialog"#
+    open-floating true
+}
+
+// ─── Noctalia ───
+// Noctalia's blurred, tinted wallpaper fills the overview behind the workspaces, as GNOME's does,
+// and the sharp wallpaper zooms out with each workspace. CachyOS's preset puts the sharp one
+// there instead, which suits Noctalia's backdrop turned off, as the preset leaves it.
+layer-rule {
+    match namespace="^noctalia-backdrop"
+    place-within-backdrop true
+}
+
+// Noctalia asks for blur behind exactly what it draws of the bar, panels and notifications
+// (compositor_blur), so niri is left to give it that; only xray is turned off. Forcing blur here
+// blurred each surface's whole rectangle, the transparent shadow margin round it too, which hung a
+// blurred band under the bar and a blurred box round every notification over the windows: niri's
+// layer blur has nothing like Hyprland's ignore_alpha to leave the margin out.
+layer-rule {
+    match namespace=r#"^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$"#
+    background-effect {
+        xray false
+    }
+}

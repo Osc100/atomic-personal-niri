@@ -1,0 +1,161 @@
+// ────────────── Keybindings ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Key-Bindings
+//
+// The Hyprland binds (~/.config/hypr/config/binds.lua), key for key where niri has the action.
+// Super + Left mouse drags a window and Super + Right mouse resizes one without a bind; Alt + Tab
+// is niri's own recent-windows switcher.
+
+binds {
+    Mod+Shift+Slash                     { show-hotkey-overlay; }
+
+    // ─── Window Management ───
+    Mod+Q                               { close-window; }
+    Mod+Alt+Space                       { toggle-window-floating; }
+    Mod+D                               { maximize-column; }
+    Mod+F                               { fullscreen-window; }
+
+    Mod+Left                            { focus-column-left; }
+    Mod+Right                           { focus-column-right; }
+    Mod+Up                              { focus-window-up; }
+    Mod+Down                            { focus-window-down; }
+    Mod+Tab                             { spawn-sh "noctalia msg window-switcher"; }
+
+    // Vim keys as niri's own config has them: focus, with Ctrl move, with Shift focus the monitor
+    // that way, with Ctrl + Shift move the column to it
+    Mod+H                               { focus-column-left; }
+    Mod+J                               { focus-window-down; }
+    Mod+K                               { focus-window-up; }
+    Mod+L                               { focus-column-right; }
+    Mod+Ctrl+H                          { move-column-left; }
+    Mod+Ctrl+J                          { move-window-down; }
+    Mod+Ctrl+K                          { move-window-up; }
+    Mod+Ctrl+L                          { move-column-right; }
+    Mod+Shift+H                         { focus-monitor-left; }
+    Mod+Shift+J                         { focus-monitor-down; }
+    Mod+Shift+K                         { focus-monitor-up; }
+    Mod+Shift+L                         { focus-monitor-right; }
+    Mod+Ctrl+Shift+H                    { move-column-to-monitor-left; }
+    Mod+Ctrl+Shift+J                    { move-column-to-monitor-down; }
+    Mod+Ctrl+Shift+K                    { move-column-to-monitor-up; }
+    Mod+Ctrl+Shift+L                    { move-column-to-monitor-right; }
+
+    // The GNOME-style overview, also on the top-left hot corner
+    Mod+S                               repeat=false { toggle-overview; }
+
+    Mod+Shift+Left                      { move-column-left; }
+    Mod+Shift+Right                     { move-column-right; }
+    Mod+Shift+Up                        { move-window-up; }
+    Mod+Shift+Down                      { move-window-down; }
+    Mod+Shift+Grave                     { move-column-to-monitor-next; }
+    Mod+Shift+WheelScrollUp             cooldown-ms=150 { move-column-to-monitor-previous; }
+    Mod+Shift+WheelScrollDown           cooldown-ms=150 { move-column-to-monitor-next; }
+    Mod+Ctrl+Shift+Right                { move-column-to-workspace-down; }
+    Mod+Ctrl+Shift+Left                 { move-column-to-workspace-up; }
+    Mod+Ctrl+Shift+WheelScrollUp        cooldown-ms=150 { move-column-to-workspace-up; }
+    Mod+Ctrl+Shift+WheelScrollDown      cooldown-ms=150 { move-column-to-workspace-down; }
+
+    // Column sizing, niri's own; Super + Minus / Plus zoomed the cursor on Hyprland, which niri
+    // has no way to do
+    Mod+R                               { switch-preset-column-width; }
+    Mod+Shift+R                         { switch-preset-column-width-back; }
+    Mod+Ctrl+F                          { expand-column-to-available-width; }
+    Mod+Minus                           { set-column-width "-10%"; }
+    Mod+Equal                           { set-column-width "+10%"; }
+    Mod+BracketLeft                     { consume-or-expel-window-left; }
+    Mod+BracketRight                    { consume-or-expel-window-right; }
+
+    // When a fullscreen game holds the keyboard, this gives the binds back
+    Mod+Escape                          allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    Ctrl+Alt+Delete                     { quit; }
+
+    // ─── Launcher ───
+    Mod+Return                          { spawn "kitty"; }
+    Mod+E                               { spawn "nautilus" "--new-window"; }
+    Mod+T                               { spawn "flatpak" "run" "org.gnome.TextEditor" "--new-window"; }
+    Mod+C                               { spawn "flatpak" "run" "org.gnome.Calculator"; }
+    XF86Calculator                      { spawn "flatpak" "run" "org.gnome.Calculator"; }
+    Mod+W                               { spawn "flatpak" "run" "app.zen_browser.zen"; }
+    Ctrl+Shift+Escape                   { spawn "kitty" "-e" "btop"; }
+    Mod+Z                               { spawn-sh "noctalia msg settings-toggle"; }
+    Mod+X                               { spawn-sh "noctalia msg panel-toggle control-center"; }
+    Mod+Space                           { spawn-sh "noctalia msg panel-toggle launcher"; }
+    Mod+Period                          { spawn-sh "noctalia msg panel-toggle launcher /emo"; }
+    // Lock is off Super + L, which focuses right as the vim keys have it
+    Mod+O                               { spawn-sh "noctalia msg session lock"; }
+    Mod+Alt+C                           { spawn-sh "noctalia msg panel-toggle session"; }
+
+    // ─── Hardware Controls ───
+    XF86AudioRaiseVolume                allow-when-locked=true { spawn-sh "noctalia msg volume-up"; }
+    XF86AudioLowerVolume                allow-when-locked=true { spawn-sh "noctalia msg volume-down"; }
+    XF86AudioMute                       allow-when-locked=true { spawn-sh "noctalia msg volume-mute"; }
+    XF86AudioMicMute                    allow-when-locked=true { spawn-sh "noctalia msg mic-mute"; }
+    XF86AudioPlay                       allow-when-locked=true { spawn-sh "noctalia msg media toggle"; }
+    XF86AudioPause                      allow-when-locked=true { spawn-sh "noctalia msg media toggle"; }
+    XF86AudioNext                       allow-when-locked=true { spawn-sh "noctalia msg media next"; }
+    XF86AudioPrev                       allow-when-locked=true { spawn-sh "noctalia msg media previous"; }
+    XF86MonBrightnessUp                 allow-when-locked=true { spawn-sh "noctalia msg brightness-up"; }
+    XF86MonBrightnessDown               allow-when-locked=true { spawn-sh "noctalia msg brightness-down"; }
+
+    // ─── Utilities ───
+    Print                               { spawn-sh "noctalia msg screenshot-region"; }
+    Mod+Print                           { spawn-sh "noctalia msg screenshot-fullscreen"; }
+    // Recording through Noctalia's screen recorder plugin: the same key again stops it. Shift
+    // drags out a region as Print does, Mod + Shift takes the whole focused monitor
+    Shift+Print                         { spawn-sh "noctalia msg plugin noctalia/screen_recorder:service all toggle region"; }
+    Mod+Shift+Print                     { spawn-sh "noctalia msg plugin noctalia/screen_recorder:service all toggle focused"; }
+    Mod+Shift+W                         { spawn-sh "noctalia msg panel-toggle wallpaper"; }
+    Mod+V                               { spawn-sh "noctalia msg panel-toggle clipboard"; }
+    Mod+A                               { spawn-sh "noctalia msg panel-toggle control-center notifications"; }
+
+    // ─── Workspaces & Monitors ───
+    Mod+Grave                           { focus-monitor-next; }
+
+    // 1-4 are the named workspaces on the main monitor. 5-0 reach the ones niri adds after them,
+    // by place on the focused monitor: the fifth onwards, the first of them niri's empty one.
+    Mod+1                               { focus-workspace "1"; }
+    Mod+2                               { focus-workspace "2"; }
+    Mod+3                               { focus-workspace "3"; }
+    Mod+4                               { focus-workspace "4"; }
+    Mod+5                               { focus-workspace 5; }
+    Mod+6                               { focus-workspace 6; }
+    Mod+7                               { focus-workspace 7; }
+    Mod+8                               { focus-workspace 8; }
+    Mod+9                               { focus-workspace 9; }
+    Mod+0                               { focus-workspace 10; }
+
+    Mod+Shift+1                         { move-column-to-workspace "1"; }
+    Mod+Shift+2                         { move-column-to-workspace "2"; }
+    Mod+Shift+3                         { move-column-to-workspace "3"; }
+    Mod+Shift+4                         { move-column-to-workspace "4"; }
+    Mod+Shift+5                         { move-column-to-workspace 5; }
+    Mod+Shift+6                         { move-column-to-workspace 6; }
+    Mod+Shift+7                         { move-column-to-workspace 7; }
+    Mod+Shift+8                         { move-column-to-workspace 8; }
+    Mod+Shift+9                         { move-column-to-workspace 9; }
+    Mod+Shift+0                         { move-column-to-workspace 10; }
+
+    Mod+Ctrl+Right                      { focus-workspace-down; }
+    Mod+Ctrl+Left                       { focus-workspace-up; }
+
+    // Page Down / Page Up (the mouse's side buttons send them with Super): the workspace above /
+    // below, the way round that reads right now niri stacks workspaces vertically
+    Mod+Page_Down                       { focus-workspace-up; }
+    Mod+Page_Up                         { focus-workspace-down; }
+
+    // The wheel the way the Hyprland binds had it: down goes back, up goes on; with Ctrl, reversed
+    Mod+WheelScrollDown                 cooldown-ms=150 { focus-workspace-up; }
+    Mod+WheelScrollUp                   cooldown-ms=150 { focus-workspace-down; }
+    Mod+Ctrl+WheelScrollUp              cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown            cooldown-ms=150 { focus-workspace-down; }
+
+    // The Keychron M6's side wheel scrolls horizontally: on its own it moves along the strip of
+    // columns, with Super it carries the focused column along. Bound bare, which needs a niri past
+    // 26.04 (niri-git): 26.04 took every scroll axis for a wheel bind, so the main wheel stopped
+    // scrolling anything, where later niri takes only the axis bound. Apps no longer see
+    // horizontal scrolling from the side wheel. No cooldown, as niri's own example has none for
+    // these: each notch is one column, at once; 150 ms between moves felt sluggish.
+    WheelScrollRight                    { focus-column-right; }
+    WheelScrollLeft                     { focus-column-left; }
+    Mod+WheelScrollRight                { move-column-right; }
+    Mod+WheelScrollLeft                 { move-column-left; }
+}

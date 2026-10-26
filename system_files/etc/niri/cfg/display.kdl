@@ -1,0 +1,26 @@
+// ────────────── Output Configuration ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
+//
+// A mode without a refresh rate takes the highest one the monitor offers at that resolution.
+// VRR is on-demand: only while a window with the variable-refresh-rate rule (the games, in
+// rules.kdl) is on screen, as Hyprland's vrr = 3 did.
+
+// Main Monitor (Samsung G60SD @ 360Hz), right of the portrait one with their bottom edges level:
+// 2048 logical pixels of portrait height less 1152 of this one's puts its top 896 down, so its
+// bottom-left corner meets the portrait monitor's bottom-right one
+output "DP-1" {
+    mode "2560x1440"
+    scale 1.25
+    position x=1152 y=896
+    variable-refresh-rate on-demand=true
+    focus-at-startup
+}
+
+// Second Monitor (Left, Rotated Portrait, 165Hz): 1440 / 1.25 = 1152 logical pixels wide
+output "DP-2" {
+    mode "2560x1440"
+    scale 1.25
+    transform "90" // use "270" if cables/stand face the other way
+    position x=0 y=0
+    variable-refresh-rate on-demand=true
+}

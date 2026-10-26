@@ -1,0 +1,14 @@
+// ────────────── Workspaces ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Named-Workspaces
+//
+// niri's workspaces are a column per monitor, made and dropped as needed; a named one is always
+// there. Four are named on the main monitor, and niri's own empty one below them makes the fifth;
+// past them niri adds workspaces of its own as they fill. The portrait monitor has one fixed
+// workspace of its own.
+
+workspace "1" { open-on-output "DP-1"; }
+workspace "2" { open-on-output "DP-1"; }
+workspace "3" { open-on-output "DP-1"; }
+workspace "4" { open-on-output "DP-1"; }
+
+workspace "side" { open-on-output "DP-2"; }
