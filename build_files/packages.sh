@@ -27,8 +27,10 @@ dnf5 -y install --from-repo=copr:copr.fedorainfracloud.org:yalter:niri-git \
 dnf5 -y install --from-repo=terra noctalia-greeter gpu-screen-recorder satty
 
 # Noctalia 5.3.0, the version the config was written with, is still in
-# updates-testing for Fedora 45, and 5.2.1 refuses its newer settings.
-dnf5 -y install --enablerepo=updates-testing --exclude='gnome-keyring* power-profiles-daemon' noctalia
+# updates-testing for Fedora 45, and 5.2.1 refuses its newer settings. It
+# recommends power-profiles-daemon, which tlp-pd also provides, and tlp
+# conflicts with the tuned below.
+dnf5 -y install --enablerepo=updates-testing --exclude='gnome-keyring* power-profiles-daemon tlp tlp-pd' noctalia
 
 # tuned-ppd serves power-profiles-daemon's D-Bus API
 # (org.freedesktop.UPower.PowerProfiles) on top of tuned, which is what
