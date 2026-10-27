@@ -32,7 +32,7 @@ background_opacity = 0.60 # see-through enough for Hyprland's blur (compositor_b
 center = [ "clock", "notifications" ]
 concave_edge_corners = true
 enabled = true # on every monitor but the portrait DP-2, see the override below
-end = [ "media", "spacer_1", "group:g1", "spacer_1", "tray", "recorder", "wallhaven", "brightness", "bluetooth", "network", "volume", "session" ]
+end = [ "media", "spacer_1", "group:g1", "spacer_1", "tray", "battery", "power_draw", "recorder", "wallhaven", "brightness", "bluetooth", "network", "volume", "session" ]
 margin_edge = 0
 margin_ends = 0
 radius_bottom_left = 12
@@ -221,10 +221,12 @@ label_content = "battery"
 label_style = "meter"
 type = "osc/cutemonitor-ups:bar"
 
-# On a laptop, at the end of the group: its power draw beside a plug, then its battery. Both hide
+# On a laptop, between the tray and the recorder: its battery, then its power draw as bare text. Both hide
 # on a machine without a system battery, and the UPS items above hide on one with.
 [widget.power_draw]
-type = "osc/cutemonitor-ups:power"
+display_mode = "none" # no battery glyph, just the wattage, after the battery widget's icon and percentage
+label_content = "rate" # the battery's charge or discharge rate in watts, from UPower
+type = "battery"
 
 [widget.battery]
 type = "battery"
