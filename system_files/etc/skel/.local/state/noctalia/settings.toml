@@ -137,7 +137,7 @@ mode = "dark"
 wallpaper_scheme = "m3-rainbow"
 
     [theme.templates]
-    builtin_ids = [ "alacritty", "btop", "gtk3", "gtk4", "hyprland", "kcolorscheme", "kitty", "niri", "qt", "scroll", "starship" ]
+    builtin_ids = [ "alacritty", "btop", "ghostty", "gtk3", "gtk4", "hyprland", "kcolorscheme", "kitty", "niri", "qt", "scroll", "starship" ]
 
 [widget.active_window]
 display = "icon_only"

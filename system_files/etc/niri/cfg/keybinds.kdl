@@ -69,13 +69,13 @@ binds {
     Ctrl+Alt+Delete                     { quit; }
 
     // ─── Launcher ───
-    Mod+Return                          { spawn "kitty"; }
+    Mod+Return                          { spawn "ghostty"; }
     Mod+E                               { spawn "nautilus" "--new-window"; }
     Mod+T                               { spawn "flatpak" "run" "org.gnome.TextEditor" "--new-window"; }
     Mod+C                               { spawn "flatpak" "run" "org.gnome.Calculator"; }
     XF86Calculator                      { spawn "flatpak" "run" "org.gnome.Calculator"; }
     Mod+W                               { spawn "flatpak" "run" "app.zen_browser.zen"; }
-    Ctrl+Shift+Escape                   { spawn "kitty" "-e" "btop"; }
+    Ctrl+Shift+Escape                   { spawn "ghostty" "-e" "btop"; }
     Mod+Z                               { spawn-sh "noctalia msg settings-toggle"; }
     Mod+X                               { spawn-sh "noctalia msg panel-toggle control-center"; }
     Mod+Space                           { spawn-sh "noctalia msg panel-toggle launcher"; }

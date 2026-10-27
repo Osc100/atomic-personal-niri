@@ -55,7 +55,6 @@ thickness = 35
     enabled = false
 
 [shell]
-clipboard_image_action_command = "satty -f -"
 launch_apps_as_systemd_services = true
 # typing in niri's overview opens the launcher with what was typed, as GNOME's overview searches
 niri_overview_type_to_launch_enabled = true
@@ -73,9 +72,7 @@ time_format = "{:%I:%M %p}"
     transparency_mode = "glass"
 
     [shell.screenshot]
-    copy_to_clipboard = false
-    pipe_command = "satty -f -"
-    pipe_to_command = true
+    copy_to_clipboard = true
     save_to_file = false
 
     [[shell.session.actions]]
@@ -143,7 +140,7 @@ source = "wallpaper"
 wallpaper_scheme = "m3-tonal-spot"
 
     [theme.templates]
-    builtin_ids = [ "btop", "gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "alacritty", "hyprland" ]
+    builtin_ids = [ "btop", "ghostty", "gtk3", "gtk4", "kcolorscheme", "kitty", "qt", "alacritty", "hyprland" ]
 
         # niri's layout and border colours, in the palette; the built-in niri template is left off
         # because it paints the focused border full-strength primary

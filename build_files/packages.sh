@@ -19,12 +19,12 @@ dnf5 -y copr enable yalter/niri-git
 
 # The COPR's version (0.0.git.N) sorts below Fedora's niri 26.04, so without
 # --from-repo dnf picks Fedora's. Of what niri recommends, Noctalia replaces
-# waybar, fuzzel, mako, swaybg, swayidle and swaylock; kitty replaces alacritty
+# waybar, fuzzel, mako, swaybg, swayidle and swaylock; Ghostty replaces alacritty
 # and oo7 gnome-keyring.
 dnf5 -y install --from-repo=copr:copr.fedorainfracloud.org:yalter:niri-git \
     --exclude=alacritty,fuzzel,mako,swaybg,swayidle,swaylock,waybar \
     --exclude='gnome-keyring*' niri
-dnf5 -y install --from-repo=terra noctalia-greeter gpu-screen-recorder satty
+dnf5 -y install --from-repo=terra noctalia-greeter gpu-screen-recorder
 
 # Noctalia 5.3.0, the version the config was written with, is still in
 # updates-testing for Fedora 45, and 5.2.1 refuses its newer settings. It
@@ -76,7 +76,7 @@ dnf5 -y install --exclude='nodejs*' \
     lsd \
     btop \
     tailscale
-dnf5 -y install --from-repo=terra zellij mise zed
+dnf5 -y install --from-repo=terra ghostty zellij mise zed
 
 # Without the rpm-ostree plugin, so it only handles Flatpaks.
 dnf5 -y install --exclude=gnome-software-rpm-ostree gnome-software

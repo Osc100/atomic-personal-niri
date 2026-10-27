@@ -1,0 +1,3 @@
+# Noctalia writes the palette to themes/noctalia whenever the theme or wallpaper changes and
+# reloads Ghostty. Its apply hook fails when this file is missing, so it ships even this bare.
+theme = noctalia
