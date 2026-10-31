@@ -1,3 +1,7 @@
 # Noctalia writes the palette to themes/noctalia whenever the theme or wallpaper changes and
 # reloads Ghostty. Its apply hook fails when this file is missing, so it ships even this bare.
 theme = noctalia
+
+# niri asks for no client-side decorations (prefer-no-csd) but draws no title bar of its own, so
+# without this Ghostty would lose its header bar and the tabs and menu in it.
+window-decoration = client
