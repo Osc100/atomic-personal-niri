@@ -25,3 +25,6 @@ systemctl enable tuned.service
 systemctl enable tuned-ppd.service
 systemctl enable atomic-niri-flatpak-preinstall.service
 systemctl set-default graphical.target
+
+# For every user: Devin and subagent steering for OpenCode, on 127.0.0.1:47821.
+systemctl --global enable claude-devin-serve.service

@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# bwrap-shell — run OpenCode's shell tool inside a bubblewrap sandbox.
+#
+# OpenCode has no sandbox backend; it has a `shell` config key naming the shell
+# used for the terminal and shell tools. Point that key here and every command
+# the agent runs is jailed by the kernel, while OpenCode's own read/edit tools
+# keep using the permission rules in opencode.jsonc.
+#
+# The whole filesystem is mounted read-only, then opened up in three places:
+# the project, the build caches (or every build recompiles or fails), and /tmp,
+# where plenty of tooling expects to write. Credentials are shadowed.
+#
+# This file is the image's, under /usr, which nothing can write to: the agent
+# cannot rewrite its own boundary. ~/.config/opencode/opencode.jsonc names it:
+#           "shell": "/usr/libexec/atomic-niri/bwrap-shell"
+set -u
+
+args=(
+    --ro-bind / /
+    --dev /dev
+    --proc /proc
+    --unshare-pid
+    --unshare-ipc
+    --unshare-uts
+    --die-with-parent
+    --new-session
+)
+
+# The GPU: --dev gives a fresh /dev with no DRM nodes, so Vulkan finds no
+# device and the game's renderer (harness captures, --twice, --fps 360) cannot
+# start. The render node is enough for headless rendering; card* is for KMS.
+[ -d /dev/dri ] && args+=(--dev-bind /dev/dri /dev/dri)
+
+# Writable: the project the agent is working in.
+args+=(--bind "$PWD" "$PWD")
+
+# Writable: /tmp, because scripts, mktemp and half of cargo expect it, and a
+# tmpfs there silently loses whatever one command leaves for the next.
+args+=(--bind /tmp /tmp)
+
+# Writable: build caches and tool-manager state. mise keeps its state outside
+# its install tree; without these every cargo/mbx/mise call fails or recompiles.
+for d in "$HOME/.cache/mbx" "$HOME/.cache/opencode" "$HOME/.cargo" \
+    "$HOME/.cache/mise" "$HOME/.local/state/mise" "$HOME/.local/share/mise" \
+    "$HOME/.local/state/opencode" "$HOME/.local/share/opencode/log"; do
+    [ -d "$d" ] && args+=(--bind "$d" "$d")
+done
+
+# Writable: the worktrees agents work in, OpenCode's and herdr's. The shell
+# starts wherever OpenCode was opened, so an agent that cds into its worktree
+# would otherwise find it read-only.
+for d in "$HOME/.local/share/opencode/worktree" "$HOME/.herdr/worktrees"; do
+    [ -d "$d" ] && args+=(--bind "$d" "$d")
+done
+
+# Writable: the git directory a worktree belongs to. A worktree's .git is a
+# file pointing into the main repository's .git, where commits, refs and the
+# index live, so without it git add and git commit fail in every worktree. Both
+# the directory OpenCode was opened in and the herdr and OpenCode worktrees an
+# agent may cd into are covered. Its hooks and config stay read-only: a hook, or a
+# core.hooksPath or core.fsmonitor in config, would run outside the sandbox the
+# next time git is used outside it.
+gitdirs=()
+add_gitdir() {
+    local common
+    common=$(git -C "$1" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) || return
+    [ -d "$common" ] || return
+    local seen
+    for seen in "${gitdirs[@]}"; do [ "$seen" = "$common" ] && return; done
+    gitdirs+=("$common")
+}
+add_gitdir "$PWD"
+for wt in "$HOME"/.herdr/worktrees/*/* "$HOME"/.local/share/opencode/worktree/*/*; do
+    [ -f "$wt/.git" ] && add_gitdir "$wt"
+done
+for common in "${gitdirs[@]}"; do
+    args+=(--bind "$common" "$common")
+    for p in "$common/hooks" "$common/config"; do
+        [ -e "$p" ] && args+=(--ro-bind "$p" "$p")
+    done
+done
+
+# Hidden: credentials, this machine's provider auth, and the passwords of the
+# servers running beside the agent: OpenCode's own (service.json, under the
+# writable state directory above) and claude-devin-acp's token. With either,
+# a command could have those servers do what the sandbox stops it doing. A
+# directory is shadowed with an empty tmpfs; a file is bound to /dev/null so
+# reads come back empty. Both are guarded, because shadowing a missing path is
+# a hard error.
+for d in "$HOME/.ssh" "$HOME/.aws" "$HOME/.kube" "$HOME/.gnupg" \
+    "$HOME/.local/state/claude-devin-acp"; do
+    [ -d "$d" ] && args+=(--tmpfs "$d")
+done
+for f in "$HOME/.netrc" "$HOME/.config/opencode/auth.json" \
+    "$HOME/.local/share/opencode/auth.json" \
+    "$HOME/.local/state/opencode/service.json" \
+    "$HOME/.config/opencode/service.json"; do
+    [ -f "$f" ] && args+=(--ro-bind /dev/null "$f")
+done
+
+exec bwrap "${args[@]}" /bin/bash "$@"

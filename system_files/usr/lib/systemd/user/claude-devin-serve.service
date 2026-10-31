@@ -1,0 +1,17 @@
+[Unit]
+Description=Devin as a model, and subagent steering, for OpenCode (claude-devin-acp)
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/claude-devin-acp
+WorkingDirectory=%h
+# A user service does not get the login shell's PATH. Devin is only started on
+# the first Devin turn, so without it the subagent steering still works.
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin
+# It runs as the user; nothing it or Devin starts gains privileges (no sudo).
+NoNewPrivileges=yes
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

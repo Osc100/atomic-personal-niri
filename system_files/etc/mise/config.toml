@@ -1,0 +1,10 @@
+# For every user: what the image's OpenCode config runs on. `mise install` puts
+# them in your home; anything in ~/.config/mise/config.toml takes precedence.
+[tools]
+claude-code = "latest"
+opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
+
+# A release must be a day old before mise installs it, so a compromised one has
+# time to be caught and pulled first.
+[settings]
+minimum_release_age = "1d"

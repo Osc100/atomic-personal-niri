@@ -35,3 +35,18 @@ noctalia-config:
     mkdir -p ~/.local/state/noctalia
     cp /etc/skel/.local/state/noctalia/settings.toml ~/.local/state/noctalia/settings.toml
     echo "Done. Log out and back in to start on it."
+
+# Copy the image's OpenCode config and agent rules to ~/.config/opencode (the old ones are backed up)
+opencode-config:
+    #!/usr/bin/bash
+    set -euo pipefail
+    stamp=$(date +%Y%m%d%H%M%S)
+    mkdir -p ~/.config/opencode
+    for f in opencode.jsonc AGENTS.md; do
+        if [[ -e ~/.config/opencode/$f ]]; then
+            mv ~/.config/opencode/$f ~/.config/opencode/$f.bak.$stamp
+            echo "Backed up the old $f to ~/.config/opencode/$f.bak.$stamp"
+        fi
+        cp /etc/skel/.config/opencode/$f ~/.config/opencode/$f
+    done
+    echo "Done. OpenCode reads it on its next start; Devin also needs the devin CLI on your PATH."

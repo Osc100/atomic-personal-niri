@@ -16,6 +16,14 @@ RUN --mount=type=bind,from=packages,source=/,target=/ctx \
 
 COPY system_files /
 
+# claude-devin-acp, Devin for OpenCode: a release of its own repository, checked
+# against its checksum (SHA256SUMS in the release). A new version is a new URL
+# and checksum here.
+ADD --chmod=0755 \
+    --checksum=sha256:8d6692f2b6e62a7b55021be86f42a0b6bba968679408934cfcdbfdd3fa14bdb9 \
+    https://github.com/Osc100/claude-devin-acp/releases/download/v0.1.0/claude-devin-acp-linux-amd64 \
+    /usr/bin/claude-devin-acp
+
 RUN --mount=type=bind,from=setup,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/setup.sh
